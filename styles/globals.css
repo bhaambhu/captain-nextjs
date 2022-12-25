@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "old_english";
+  src: url("/assets/fonts/OldEnglishFive.ttf");
+}
+
+@font-face {
+  font-family: "libre_bold";
+  src: url("/assets/fonts/LibreFranklin-Bold.ttf");
+}
+
+@font-face {
+  font-family: "libre_light";
+  src: url("/assets/fonts/LibreFranklin-Light.ttf");
+}
+
+@font-face {
+  font-family: "libre_medium";
+  src: url("/assets/fonts/LibreFranklin-Medium.ttf");
+}
+
+@font-face {
+  font-family: "libre_regular";
+  src: url("/assets/fonts/LibreFranklin-Regular.ttf");
+}
+
+@font-face {
+  font-family: "mw_black";
+  src: url("/assets/fonts/Merriweather-BlackItalic.ttf");
+}
+
+@font-face {
+  font-family: "mw_bold";
+  src: url("/assets/fonts/Merriweather-BoldItalic.ttf");
+}
+
+@font-face {
+  font-family: "mw_italic";
+  src: url("/assets/fonts/Merriweather-Italic.ttf");
+}
+
+@font-face {
+  font-family: "mw_light";
+  src: url("/assets/fonts/Merriweather-Light.ttf");
+}
+
+@font-face {
+  font-family: "mw_regular";
+  src: url("/assets/fonts/Merriweather-Regular.ttf");
+}
+
+body {
+  margin: 0;
+  background-color: #bbb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}

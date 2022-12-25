@@ -1,0 +1,16 @@
+export default Object.freeze({
+  h1_headline: "mw_black",
+  h2_headline: "libre_light",
+  h3_headline: "mw_black",
+  h4_headline: "libre_regular",
+  h5_headline: "libre_regular",
+  h6_headline: "mw_bold",
+  subtitle_1: "libre_medium",
+  subtitle_2: "mw_light",
+  body_1: "mw_regular",
+  body_2: "libre_regular",
+  button: "libre_bold",
+  caption: "mw_italic",
+  overline: "libre_bold",
+  logo: "old_english",
+});

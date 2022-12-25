@@ -1,0 +1,9 @@
+Use this for modification:
+
+Loading anim:
+https://assets1.lottiefiles.com/datafiles/rFr1le9E8lhiQjf/data.json
+
+Network Error anim:
+https://assets5.lottiefiles.com/datafiles/Qmze6foNYQLQGCK/data.json
+
+Try manual JSON file upload if above URL fails.
