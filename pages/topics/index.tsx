@@ -34,7 +34,7 @@ export default function Topics() {
         }}
       >
         <SectionHeader>
-          Topics that don't have any subject assigned:
+          Topics that don&apos;t have any subject assigned:
         </SectionHeader>
         {orphanTopics.map((item) => {
           return (
