@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { stepType, stepTypeString } from "../../config/enums";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import ListItemTopic from "../ListItems/ListItemTopic";
+import SanEDDButton from "../Buttons/SanEDDButton";
 import ListContainer from "../ListItems/ListContainer";
 import SectionHeader from "../Texts/SectionHeader";
 import TheoryStep from "./TheoryStep";
 import MCQStep from "./MCQStep";
 import TopicInfoStep from "./TopicInfoStep";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
-import colors from "../../config/colors";
 import Modal from "../../components/Modal";
-import JSONViewer from "../JSONViewer";
+import twColors from "../../config/twColors";
 
 const topic_example = {
   breadcrumbs: [
@@ -245,14 +244,12 @@ export default function TopicEditor({
 
   return (
     <div
-      style={{
-        display: "flex",
-        width: "100%",
-        gap: 10,
-      }}
+      className="flex w-full gap-2.5"
     >
       {/* Left side section */}
-      <div style={{ minWidth: 200, maxWidth: 200 }}>
+      <div
+        className="max-w-[200px]"
+      >
         <DragDropContext
           onDragEnd={(param) => {
             const srcI = param.source.index;
@@ -270,9 +267,11 @@ export default function TopicEditor({
           <Droppable droppableId="droppable-1">
             {(provided, _) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <ListContainer>
+                <ListContainer
+                  className={twColors.surface2}
+                >
                   {/* Info list item */}
-                  <ListItemTopic
+                  <SanEDDButton
                     onClick={() => {
                       setSelectedStep({
                         ...selectedStep,
@@ -280,11 +279,11 @@ export default function TopicEditor({
                         sid: null,
                       });
                     }}
-                    overline="Edit Information"
+                    overline="Edit Topic"
                     title={topicData.title}
                     selected={selectedStep.stepType === stepType.Info}
                   />
-                  <ListItemTopic
+                  <SanEDDButton
                     onClick={() => {
                       setSelectedStep({
                         ...selectedStep,
@@ -296,7 +295,7 @@ export default function TopicEditor({
                     title={topicData.assessor?.title}
                     selected={selectedStep.stepType === stepType.AssessQ}
                   />
-                  <SectionHeader>STEPS</SectionHeader>
+                  <SectionHeader>STEPS IN TOPIC</SectionHeader>
                   {topicData.steps?.map((step, i) => {
                     return (
                       <Draggable
@@ -313,7 +312,7 @@ export default function TopicEditor({
                             }}
                           >
                             {/* List Item for Step (Theory/MCQ) */}
-                            <ListItemTopic
+                            <SanEDDButton
                               {...provided.dragHandleProps}
                               style={{
                                 ...provided.draggableProps.style,
@@ -321,18 +320,24 @@ export default function TopicEditor({
                                   ? "0 0 .4rem #666"
                                   : "none",
                               }}
+                              className="w-full"
                               overline={stepTypeString(step.type)}
                               title={step.title}
-                              onDelete={() => {
+                              onDelete={(e) => {
+                                e.stopPropagation();
                                 var confirmDelete = window.confirm(
                                   "Are you sure you want to delete this whole step?"
                                 );
                                 if (confirmDelete) {
-                                  if (selectedStep.sid == step.sid) {
-                                    setSelectedStep({
-                                      ...selectedStep,
-                                      stepType: stepType.Info,
-                                      sid: null,
+                                  // Load info step onto step displayer
+                                  if (selectedStep.sid === step.sid) {
+                                    console.log("setting step to", stepType.Info)
+                                    setSelectedStep(selectedStep => {
+                                      return {
+                                        ...selectedStep,
+                                        stepType: stepType.Info,
+                                        sid: null,
+                                      };
                                     });
                                   }
                                   // let currentTopic = Object.assign({}, topicData);
@@ -348,6 +353,7 @@ export default function TopicEditor({
                               }}
                               draggable
                               onClick={() => {
+                                console.log("setting selected step via onclick to ", step.type)
                                 setSelectedStep({
                                   ...selectedStep,
                                   stepType: step.type,
@@ -363,9 +369,9 @@ export default function TopicEditor({
                   })}
                   {provided.placeholder}
                   <div
-                    style={{ display: "flex", gap: 10, flexDirection: "row" }}
+                    className="flex gap-2.5"
                   >
-                    <ListItemTopic
+                    <SanEDDButton
                       onClick={() => {
                         // let newTopic = Object.assign({}, topicData);
                         let newSteps = topicData.steps;
@@ -385,10 +391,11 @@ export default function TopicEditor({
                         setUnsavedChanges(true);
                         setTopicData({ ...topicData, steps: newSteps });
                       }}
+                      className={twColors.addContainer}
                       overline="Add New Step"
                       title="THEORY"
                     />
-                    <ListItemTopic
+                    <SanEDDButton
                       onClick={() => {
                         // let newTopic = Object.assign({}, topicData);
                         let newSteps = topicData.steps;
@@ -412,19 +419,23 @@ export default function TopicEditor({
                         setUnsavedChanges(true);
                         setTopicData({ ...topicData, steps: newSteps });
                       }}
+                      className={twColors.addContainer}
                       overline="Add New Step"
                       title="MCQ"
                     />
                   </div>
                   {unsavedChanges && (
-                    <ListItemTopic
-                      onClick={() => {
-                        saveTopic(topicData);
-                      }}
-                      style={{ backgroundColor: colors.greenBGLight }}
-                      overline="Topic Edited"
-                      title="SAVE TOPIC ONLINE"
-                    />
+                    <>
+                      <SectionHeader>ACTIONS</SectionHeader>
+                      <SanEDDButton
+                        onClick={() => {
+                          saveTopic(topicData);
+                        }}
+                        className={twColors.unsavedContainer}
+                        overline="Unsaved Changes"
+                        title="SAVE TOPIC ONLINE"
+                      />
+                    </>
                   )}
                 </ListContainer>
               </div>
@@ -433,7 +444,8 @@ export default function TopicEditor({
         </DragDropContext>
       </div>
       {/* Right section */}
-      <div style={{ width: "100%" }}>
+      <div className="w-full">
+        {console.log("Selected step is ", selectedStep.stepType)}
         {selectedStep.stepType === stepType.Info ? (
           <TopicInfoStep
             topicData={topicData}
@@ -443,10 +455,10 @@ export default function TopicEditor({
             }}
             onDeleteTopic={deleteTopic}
           />
-        ) : 
-        // <div>
-        //     <pre>{JSON.stringify(topic, null, 2)}</pre>
-        //   </div>
+        ) :
+          // <div>
+          //     <pre>{JSON.stringify(topic, null, 2)}</pre>
+          //   </div>
           selectedStep.stepType === stepType.Theory ? (
             <TheoryStep
               theoryStepData={Object.assign(

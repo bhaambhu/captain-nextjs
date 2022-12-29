@@ -1,54 +1,60 @@
 import React from "react";
-import colors from "../../config/colors";
-import fonts from "../../config/fonts";
 import { RiDragMoveFill } from "react-icons/ri";
 import { CgRemove } from "react-icons/cg";
 import MyTextEditor from "../TextEditors/MyTextEditor";
+import { TiDelete } from "react-icons/ti";
+import twColors from "../../config/twColors";
+import { twMerge } from "tailwind-merge";
+import CheckboxPill from "../CheckboxPill";
 
 export default function ListItemMCQOption({
   mcqOptionData,
   onMCQOptionDataChange,
-  style,
+  className = '',
   sid,
   draggable = false,
   editable = false,
   onDelete,
+  onDeleteHover = 'Remove',
   ...otherprops
 }) {
-  // console.log("Content is ", theorySectionData.content);
+  // console.log("Content is ", mcqOptionData.content);
   return (
     <div
-      style={{
-        width: "100%",
-        backgroundColor: colors.bgSurface,
-        border: "1px solid",
-        borderColor: colors.textStrong,
-        borderRadius: 2,
-        display: "flex",
-        // padding: 10,
-        overflow: "clip",
-        flexDirection: "row",
-        color: colors.textStrong,
-        ...style,
-      }}
+      className={twMerge(`${twColors.inputField} flex flex-col cursor-pointer border rounded-sm border-current ${className}`)}
       {...otherprops}
     >
-      {draggable && (
-        <RiDragMoveFill
-          style={{
-            alignSelf: "center",
-            color: colors.textStrong,
-            padding: "10px 0px",
-            paddingLeft: 10,
-            height: "100%",
-          }}
-        />
-      )}
-      <div style={{ padding: 10, flex: 1 }}>
+      {/* Upper Area - Title, Drag Handle, Delete Button */}
+      <div className="w-full py-1.5 px-2 flex justify-between items-center">
+
+        {/* Drag Handle and Title */}
+        <div className="flex items-center font-overline w-full gap-1 ">
+          {draggable && (
+            <RiDragMoveFill
+              className="mr-1"
+            />
+          )}
+          {"Drag to change order"}
+        </div>
+
+        {/* Delete */}
+        {onDelete && (
+          <div className="text-xl leading-none flex cursor-pointer" title={onDeleteHover}>
+            <TiDelete
+              onClick={onDelete}
+              className={twColors.cross}
+            />
+            {/* &ndash; */}
+          </div>
+        )}
+      </div>
+
+      {/* Main Editor Section */}
+      <div className="m-2 rounded-sm">
         {editable ? (
           <MyTextEditor
             placeholder="Enter content of this option here..."
-            style={{ marginBottom: 10 }}
+            className="w-full bg-transparent p-1 border border-current"
             content={mcqOptionData.content}
             sid={sid}
             onChangeContent={(content) => {
@@ -58,63 +64,25 @@ export default function ListItemMCQOption({
           />
         ) : (
           <div
-            style={{
-              fontFamily: fonts.body_1,
-              padding: "0px 5px",
-            }}
+            className="font-body_1"
             dangerouslySetInnerHTML={{ __html: mcqOptionData.content }}
           />
         )}
-        <div
-          style={{
-            backgroundColor: colors.bgDefault,
-            display: "inline-flex",
-            padding: 5,
-            paddingRight: 8,
-            gap: 5,
-            border: "1px solid",
-            borderRadius: 2,
-          }}
-        >
-          <input
-            type="checkbox"
-            readOnly={!editable}
-            onChange={(event) => {
-              if (editable) {
-                mcqOptionData.correct = event.target.checked;
-                onMCQOptionDataChange(mcqOptionData, sid);
-              }
-            }}
-            checked={mcqOptionData.correct}
-          />{" "}
-          <span
-            style={{
-              fontSize: 12,
-              alignSelf: "center",
-              color: colors.textStrong,
-            }}
-          >
-            {mcqOptionData.correct ? "Correct Option" : "Incorrect Option"}
-          </span>
-        </div>
       </div>
-      {onDelete && (
-        <CgRemove
-          onClick={onDelete}
-          style={{
-            cursor: "pointer",
-            color: colors.textStrong,
-            marginLeft: 10,
-            padding: "0px 5px",
-            borderLeftWidth: 1,
-            borderLeftColor: colors.textStrong,
-            borderLeftStyle: "solid",
-            height: "100%",
-            overflow: "clip",
-            backgroundColor: colors.bgDisabled,
-          }}
-        />
-      )}
+      {/* Correct Option Checker */}
+      <CheckboxPill
+        onChange={(event) => {
+          if (editable) {
+            mcqOptionData.correct = event.target.checked;
+            onMCQOptionDataChange(mcqOptionData, sid);
+          }
+        }}
+        className='mx-2 mb-2'
+        readOnly={!editable}
+        checked={mcqOptionData.correct}
+      >
+        {mcqOptionData.correct ? "Option Correct" : "Option Incorrect"}
+      </CheckboxPill>
     </div>
   );
 }

@@ -1,74 +1,43 @@
 import React from "react";
-import colors from "../../config/colors";
-import fonts from "../../config/fonts";
 import { RiDragMoveFill } from "react-icons/ri";
 import { CgRemove } from "react-icons/cg";
 import MyTextEditor from "../TextEditors/MyTextEditor";
-import dimensions from "../../config/dimensions";
+import { twMerge } from "tailwind-merge";
+import twColors from "../../config/twColors";
+import { TiDelete } from "react-icons/ti";
 
 export default function ListItemTheorySection({
   theorySectionData,
   onTheorySectionDataChange,
+  className = '',
   titlePlaceholder = "Enter Section Title",
   contentPlaceholder,
-  style,
   sid,
   draggable = false,
   editable = false,
   onDelete,
+  onDeleteHover = 'Remove',
   ...otherprops
 }) {
   // console.log("Content is ", theorySectionData.content);
   return (
     <div
-      style={{
-        width: "100%",
-        backgroundColor: colors.bgSurface,
-        border: "1px solid",
-        borderColor: colors.textStrong,
-        borderRadius: 2,
-        display: "flex",
-        // overflow: "clip",
-        flexDirection: "row",
-        color: colors.textStrong,
-        ...style,
-      }}
+      className={twMerge(`${twColors.inputField} flex flex-col cursor-pointer border rounded-sm border-current ${className}`)}
       {...otherprops}
     >
-      {draggable && (
-        <RiDragMoveFill
-          style={{
-            alignSelf: "center",
-            color: colors.textStrong,
-            padding: "10px 0px",
-            paddingLeft: 10,
-            height: "100%",
-          }}
-        />
-      )}
-      <div style={{ padding: 10, flex: 1 }}>
-        <div
-          style={{
-            fontSize: 10,
-            display: "flex",
-            color: colors.textWeak,
-            textTransform: "uppercase",
-            fontFamily: fonts.overline,
-            marginBottom: 5,
-            width: "100%",
-          }}
-        >
+      {/* Upper Area - Title, Drag Handle, Delete Button */}
+      <div className="w-full py-1.5 px-2 flex justify-between items-center">
+
+        {/* Drag Handle and Title */}
+        <div className="flex items-center font-overline w-full gap-1 ">
+          {draggable && (
+            <RiDragMoveFill
+            />
+          )}
           {editable ? (
             <input
               type="text"
-              style={{
-                fontSize: 16,
-                marginBottom: 5,
-                fontFamily: fonts.overline,
-                color: colors.textMedium,
-                padding: 5,
-                flex: 1,
-              }}
+              className="w-full bg-transparent"
               placeholder={titlePlaceholder}
               value={theorySectionData.title}
               onChange={(event) => {
@@ -80,10 +49,24 @@ export default function ListItemTheorySection({
             theorySectionData.title
           )}
         </div>
+
+        {/* Delete */}
+        {onDelete && (
+          <div className="text-xl leading-none flex cursor-pointer" title={onDeleteHover}>
+            <TiDelete
+              onClick={onDelete}
+              className={twColors.cross}
+            />
+            {/* &ndash; */}
+          </div>
+        )}
+      </div>
+      {/* Main Editor Section */}
+      <div className="m-2 rounded-sm">
         {editable ? (
           <MyTextEditor
-            style={{ width: "100%" }}
             placeholder={contentPlaceholder}
+            className="w-full bg-transparent p-1 border border-current"
             content={theorySectionData.content}
             sid={sid}
             onChangeContent={(content) => {
@@ -93,32 +76,21 @@ export default function ListItemTheorySection({
           />
         ) : (
           <div
-            style={{
-              fontFamily: fonts.body_1,
-            }}
+            className="font-body_1"
             dangerouslySetInnerHTML={{ __html: theorySectionData.content }}
           />
         )}
       </div>
-      {onDelete && (
-        <div>
-          <CgRemove
-            onClick={onDelete}
-            style={{
-              cursor: "pointer",
-              color: colors.textStrong,
-              marginLeft: 10,
-              padding: "0px 5px",
-              borderLeftWidth: 1,
-              borderLeftColor: colors.textStrong,
-              borderLeftStyle: "solid",
-              height: "100%",
-              overflow: "clip",
-              backgroundColor: colors.bgDisabled,
-            }}
-          />
-        </div>
-      )}
     </div>
+    //   {/* Delete Button */}
+    //   {onDelete && (
+    //     <div className="cursor-pointer text-cclrs-dark-strong px-1 w-8 border-l border-l-cclrs-dark-strong h-full overflow-clip bg-cclrs-bg-error items-center flex">
+    //       <CgRemove
+    //         onClick={onDelete}
+    //         className="w-full h-full"
+    //       />
+    //     </div>
+    //   )}
+    // </div>
   );
 }

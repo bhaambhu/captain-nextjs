@@ -1,9 +1,3 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import prisma from '../lib/prisma'
-import JobCard from '../components/JobCard'
-
 export default function Home() {
   const jobs = [
     {

@@ -21,6 +21,7 @@
     "eslint-config-next": "13.0.2",
     "jwt-decode": "^3.1.2",
     "next": "13.0.2",
+    "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-beautiful-dnd-next": "^11.0.5",
@@ -28,6 +29,7 @@
     "react-icons": "^4.6.0",
     "react-quill": "^2.0.0",
     "styled-components": "^5.3.6",
+    "tailwind-merge": "^1.8.1",
     "typescript": "4.8.4"
   },
   "devDependencies": {

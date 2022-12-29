@@ -8,12 +8,7 @@ type AppProps = {
 function Logo({children}:AppProps) {
   return (
     <div
-    className='font-logo text-xl text-cclrs-dark-strong'
-      // style={{
-      //   fontSize: 20,
-      //   fontFamily: "old_english",
-      //   color: colors.textStrong,
-      // }}
+    className='font-logo text-xl'
     >
       {children}
     </div>

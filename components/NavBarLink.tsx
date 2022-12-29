@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react'
 import { CSSProperties } from 'react'
+import { twMerge } from 'tailwind-merge';
+import twColorTheme from '../config/twColors';
 
 type AppProps = {
   to: string;
@@ -14,9 +16,7 @@ function NavBarLink({ style, to, children }: AppProps) {
   return (
     <Link
       className={
-        router.pathname == to
-          ? 'text-cclrs-secondary-normal font-button'
-          : 'text-cclrs-dark-strong font-button'
+        twMerge(((router.pathname == to) ? twColorTheme.twNavbarLinkColors.current : twColorTheme.twNavbarLinkColors.others) + 'font-button')
       }
       href={to}>{children}</Link>
   )

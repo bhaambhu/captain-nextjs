@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, TextButton } from "./Button"
-import ListItemTopic from "./ListItems/ListItemTopic";
+import { Button, TextButton } from "./Buttons/Button"
+import SanEDDButton from "./Buttons/SanEDDButton";
 import ListContainer from "./ListItems/ListContainer";
 import SectionHeader from "./Texts/SectionHeader";
 import colors from "../config/colors";
@@ -9,6 +9,7 @@ import { breadString } from "../config/utils";
 import dimensions from "../config/dimensions";
 import APIEndpoints from "../config/APIEndpoints";
 import TopicSelectModal from "./TopicSelectModal";
+import twColors from "../config/twColors";
 
 export default function SubjectInfo({
   data,
@@ -20,7 +21,7 @@ export default function SubjectInfo({
 }) {
   const [showTopicSelector, setShowTopicSelector] = useState(false);
   return (
-    <div>
+    <div className="max-w-[40%]">
       {showTopicSelector && (
         <TopicSelectModal
           heading={"Select Topic"}
@@ -35,20 +36,22 @@ export default function SubjectInfo({
           }}
         />
       )}
-      <ListContainer>
-        <SectionHeader>{breadString(data.breadcrumbs, true)}</SectionHeader>
-        <ListItemTopic
+      <ListContainer className={twColors.surface1}>
+        <SectionHeader bar={false} className='uppercase'>{breadString(data.breadcrumbs, true)}</SectionHeader>
+        <SanEDDButton
           overline="TITLE"
           placeholder="Enter Subject Title"
+          className={twColors.inputField}
           title={data.name}
           onChange={(newValue) => {
             data.name = newValue;
             onDataChange(data);
           }}
         />
-        <ListItemTopic
+        <SanEDDButton
           overline="ABOUT"
           placeholder="Enter a short description about this subject."
+          className={twColors.inputField}
           title={data.about}
           onChange={(newValue) => {
             data.about = newValue;
@@ -60,27 +63,22 @@ export default function SubjectInfo({
             Save
           </TextButton>
         )}
-      </ListContainer>
-      <div style={{ border: "1px solid", borderColor: colors.bgDisabled }} />
-      <ListContainer>
         <SectionHeader>TOPICS</SectionHeader>
         <TopicsGrid topics={data.topics} />
-        <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <Button
-            backgroundColor={colors.yellowBG}
-            onClick={() => {
-              setShowTopicSelector(true);
-            }}
-          >
-            Add Topic
-          </Button>
-        </div>
+        <Button
+          className={twColors.addContainer}
+          onClick={() => {
+            setShowTopicSelector(true);
+          }}
+        >
+          Add Topic
+        </Button>
 
         <SectionHeader>ACTIONS</SectionHeader>
         <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
           <Button
-            backgroundColor={colors.yellowBG}
-            onClick={() => {
+          className={twColors.addContainer}
+          onClick={() => {
               const subjectName = window.prompt("Enter new subject's name:");
               if (subjectName === null) return;
               onCreateChild(subjectName, data.id);
@@ -90,6 +88,7 @@ export default function SubjectInfo({
           </Button>
           <Button
             backgroundColor={colors.errorBg}
+            className={twColors.deleteContainer}
             onClick={() => {
               console.log("calling delete with id: " + data.id);
               var confirmDelete = window.confirm(
@@ -103,8 +102,7 @@ export default function SubjectInfo({
             Delete This Subject
           </Button>
         </div>
-        <SectionHeader>JSON View</SectionHeader>
-        <JSONViewer>{data}</JSONViewer>
+        <JSONViewer heading={'JSON View'}>{data}</JSONViewer>
       </ListContainer>
     </div>
   );
@@ -123,7 +121,7 @@ function TopicsGrid({ topics }) {
     >
       {topics.map((item) => {
         return (
-          <ListItemTopic
+          <SanEDDButton
             key={item.id}
             topicToSubjectDraggable={true}
             topic_id={item.id}

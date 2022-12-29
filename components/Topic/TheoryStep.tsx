@@ -1,10 +1,11 @@
 import React from "react";
 import { stepType } from "../../config/enums";
-import ListItemTopic from "../ListItems/ListItemTopic";
+import SanEDDButton from "../Buttons/SanEDDButton";
 import ListContainer from "../ListItems/ListContainer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SectionHeader from "../Texts/SectionHeader";
 import ListItemTheorySection from "../ListItems/ListItemTheorySection";
+import twColors from "../../config/twColors";
 
 const example = {
   title: "The big O notation",
@@ -76,19 +77,20 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
       <Droppable droppableId="droppable-1">
         {(provided, _) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            <ListContainer style={{ flex: 1 }}>
-              <ListItemTopic
+            <ListContainer className={twColors.surface3}>
+              <SanEDDButton
                 overline="THEORY"
                 placeholder="Enter Theory Title"
                 title={theoryStepData.title}
+                className={twColors.inputField}
                 onChange={(newValue) => {
                   theoryStepData.title = newValue;
                   onTheoryStepDataChange(theoryStepData);
                 }}
               />
 
-              <SectionHeader>SECTIONS</SectionHeader>
-              {theoryStepData.sections.map((section, i) => {
+              <SectionHeader>SECTIONS (Drag to Change Order)</SectionHeader>
+              {theoryStepData.sections?.map((section, i) => {
                 return (
                   <Draggable key={i} draggableId={"draggable-" + i} index={i}>
                     {(provided, snapshot) => (
@@ -107,6 +109,7 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
                               ? "0 0 .4rem #666"
                               : "none",
                           }}
+                          className="w-full"
                           theorySectionData={section}
                           sid={theoryStepData.sid}
                           onTheorySectionDataChange={(section) => {
@@ -140,7 +143,7 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
                 );
               })}
               {provided.placeholder}
-              <ListItemTopic
+              <SanEDDButton
                 onClick={() => {
                   let newSections = theoryStepData.sections;
                   newSections.push({
@@ -149,9 +152,10 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
                   });
                   theoryStepData.sections = newSections;
                   onTheoryStepDataChange(theoryStepData);
-                  // setSections((sections) => [...newSections]);
                 }}
-                title="Add Theory Section"
+                className={twColors.addContainer+' w-fit '}
+                overline="Add"
+                title="Theory Section"
               />
             </ListContainer>
           </div>

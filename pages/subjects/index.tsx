@@ -1,10 +1,7 @@
-import { GetServerSideProps, GetStaticProps } from 'next'
 import React, { useEffect, useState } from 'react'
 import JSONViewer from '../../components/JSONViewer';
 import Modal from '../../components/Modal';
-import dimensions from '../../config/dimensions';
 import subjectsAPIService from '../../lib/APIServices/subjectsAPIService';
-import prisma from '../../lib/prisma'
 import Spinner from "@atlaskit/spinner";
 import Tree, {
   mutateTree,
@@ -16,82 +13,14 @@ import Tree, {
   TreeSourcePosition,
   TreeDestinationPosition,
 } from '@atlaskit/tree';
-import colors from '../../config/colors';
 import SubjectInfo from '../../components/SubjectInfo';
 import topicsAPIService from '../../lib/APIServices/topicsAPIService';
-import { Button } from '../../components/Button';
+import { Button } from '../../components/Buttons/Button';
+import SectionHeader from '../../components/Texts/SectionHeader';
+import { twMerge } from 'tailwind-merge';
+import twColors from '../../config/twColors';
+import { SubjectTree, subjectDataFormat, loadSubjects } from '../../components/SubjectTree';
 
-const subjectsData = {
-  rootId: 1,
-  items: {
-    1: {
-      id: 1,
-      children: [],
-      hasChildren: false,
-      isExpanded: false,
-      isChildrenLoading: false,
-      name: "root",
-      display_name: "root",
-    },
-  },
-};
-
-const PADDING_PER_LEVEL = 16;
-const SpinnerContainer = (props) => {
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        width: "16px",
-        justifyContent: "flex-start",
-      }}
-      {...props}
-    />
-  );
-};
-const PreTextIcon = ({
-  bgcolor = colors.secondaryLight,
-  onClick,
-  children,
-}) => {
-  return (
-    <div
-      style={{
-        display: "inline-flex",
-        padding: "0px 15px",
-        backgroundColor: bgcolor,
-        cursor: "pointer",
-      }}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  );
-};
-const getIcon = (item, onExpand, onCollapse) => {
-  if (item.isChildrenLoading) {
-    return (
-      <PreTextIcon onClick={() => onCollapse(item.id)}>
-        <div>
-          <Spinner appearance="inherit" size={12} />
-        </div>
-      </PreTextIcon>
-    );
-  }
-  if (item.hasChildren) {
-    return item.isExpanded ? (
-      <PreTextIcon
-        bgcolor={colors.bgDefault}
-        onClick={() => onCollapse(item.id)}
-      >
-        -
-      </PreTextIcon>
-    ) : (
-      <PreTextIcon onClick={() => onExpand(item.id)}>+</PreTextIcon>
-    );
-  }
-  return <PreTextIcon bgcolor={colors.textDisabled}>&bull;</PreTextIcon>;
-};
 export default function Subjects(props) {
   const [treeData, setTreeData] = useState(null);
 
@@ -99,47 +28,8 @@ export default function Subjects(props) {
   const [networkLoading, setNetworkLoading] = useState(true);
 
   const [selectedSubject, setSelectedSubject] = useState();
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
   const [pendingChanges, setPendingChanges] = useState(false);
-
-  const onExpand = async (itemId) => {
-    console.log("OnExpand on " + itemId);
-
-    // 1. Marking the expanded item with `isChildrenLoading` flag
-    // setTree((tree) => mutateTree(tree, itemId, { isChildrenLoading: true }));
-    treeData.items[itemId].isChildrenLoading = true;
-    setTreeData({ ...treeData, ...treeData });
-
-    // 2. Make the async server request
-    console.log("fetching children for " + itemId);
-    const result = await subjectsAPIService.getSubjectChildren(itemId);
-    if (!result.ok) return "Error: " + result.problem;
-    console.log('received api data on expand', result.data);
-
-    // Add the received children to the tree data
-    result.data.forEach((item) => {
-      treeData.items[item.id] = item;
-    });
-    // 3. When the result comes back we can mutate the tree.
-    //    It's important to get a fresh reference from the state.
-    const currentItem = treeData.items[itemId];
-    if (currentItem.isChildrenLoading) {
-      currentItem.isExpanded = true;
-      currentItem.isChildrenLoading = false;
-    }
-    treeData.items[itemId] = currentItem;
-    setTreeData({ ...treeData, ...treeData });
-    return result.data;
-  };
-
-  const onCollapse = (itemId) => {
-    setTreeData((treeData) =>
-      mutateTree(treeData, itemId, { isExpanded: false, isChildrenLoading: false })
-    );
-  };
-
-  const getIDFromPosition = (parentID, index, tree) => {
-    return tree.items[parentID].children[index];
-  };
 
   const onDeleteSubject = async (id, parentId) => {
     setNetworkLoading(true);
@@ -157,7 +47,7 @@ export default function Subjects(props) {
       const childNodesResponse = await subjectsAPIService.getSubjectChildren(id);
       if (!childNodesResponse.ok) return "Error: " + childNodesResponse.problem;
       console.log(childNodesResponse.data);
-      
+
 
       // Add the received children to the tree data
       childNodesResponse.data.forEach((item) => {
@@ -216,7 +106,7 @@ export default function Subjects(props) {
     console.log("done");
   };
 
-  const reparentTopic = async (topicId, subjectId) => {
+  const onDropTopicOnSubject = async (topicId, subjectId) => {
     setNetworkLoading(true);
     const result = await topicsAPIService.updateTopicSubject(
       topicId,
@@ -253,9 +143,43 @@ export default function Subjects(props) {
     console.log("done");
   };
 
-  // source has parentId and index => from this we determine dragged node's id
-  // destination has parentId and index
-  const onDragEnd = async (source, destination) => {
+  const saveSubjectDetail = async () => {
+    console.log("saving subject detail...");
+    // await new Promise((r) => setTimeout(r, 2000));
+    const result = await subjectsAPIService.saveSubjectDetail(selectedSubject);
+    if (!result.ok) return "Error: " + result.problem;
+    console.log("Saved Subject Detail Online");
+    console.log(result.data);
+    setPendingChanges(false);
+    treeData.items[selectedSubject.id].name = selectedSubject.name;
+    setTreeData({ ...treeData, ...treeData });
+    return result.data;
+  };
+
+  const loadSelectedSubject = async (subject_id) => {
+    if (selectedSubject != null && selectedSubject.id == subject_id) return;
+    if (pendingChanges) {
+      var confirmRevert = window.confirm(
+        "This subject has unsaved changes. They will be removed if you have not saved them yet. Are you sure you want to proceed?"
+      );
+      if (!confirmRevert) return;
+      else setPendingChanges(false);
+    }
+    setNetworkLoading(true);
+    console.log("fetching selected subject...");
+    const result = await subjectsAPIService.getSubjectDetail(subject_id);
+    if (!result.ok) return "Error: " + result.problem;
+    console.log(result.data);
+    setSelectedSubject(result.data);
+    setNetworkLoading(false);
+    return result.data;
+  };
+
+  const getIDFromPosition = (parentID, index, tree) => {
+    return tree.items[parentID].children[index];
+  };
+
+  const onDropSubjectOnSubject = async (source, destination) => {
 
     console.log("Drag ended, source:", source, " destination: ", destination);
     if (!destination || (source == destination)) {
@@ -297,116 +221,15 @@ export default function Subjects(props) {
     setTreeData({ ...treeData, ...newTree });
   };
 
-  // MAKE SURE THE API returned Subjects no subject's id should be = 1, because thats the default root here.
-  const loadSubjects = async () => {
-    setNetworkLoading(true);
-    console.log("fetching subjects...");
-    // await new Promise((r) => setTimeout(r, 2000));
-    const result = await subjectsAPIService.getRootLevelSubjects();
-    if (!result.ok) return "Error: " + result.problem;
-    console.log('received api response:', result.data);
-    // convert children from JSONArray to simple array of IDS. add hasChildren and isExpanded fields
-    var rootChildrenArray = [];
-    result.data.forEach((item) => {
-      // Add item to our base subjectsData array
-      subjectsData.items[item.id] = item;
-      // Configurations for base subjectsData array, which requires a root, we add these subjects to its root as children
-      rootChildrenArray.push(item.id);
-      subjectsData.items[subjectsData.rootId].hasChildren = true;
-      subjectsData.items[subjectsData.rootId].isExpanded = true;
-    })
-
-    // result.data.forEach((item) => {
-    //   subjectsData.items[item.id] = item;
-    //   rootsChildrenArray.push(item.id);
-    //   subjectsData.items[subjectsData.rootId].hasChildren = true;
-    //   subjectsData.items[subjectsData.rootId].isExpanded = true;
-    // });
-    subjectsData.items[subjectsData.rootId].children = rootChildrenArray;
-    console.log("Setting tree for the first time to:", subjectsData);
-    setTreeData(subjectsData);
-    console.log(treeData)
-    setNetworkLoading(false);
-    return result.data;
-  };
-
-  const saveSubjectDetail = async () => {
-    console.log("saving subject detail...");
-    // await new Promise((r) => setTimeout(r, 2000));
-    const result = await subjectsAPIService.saveSubjectDetail(selectedSubject);
-    if (!result.ok) return "Error: " + result.problem;
-    console.log("Saved Subject Detail Online");
-    console.log(result.data);
-    setPendingChanges(false);
-    treeData.items[selectedSubject.id].name = selectedSubject.name;
-    setTreeData({ ...treeData, ...treeData });
-    return result.data;
-  };
-
-  const renderItem = ({ item, onExpand, onCollapse, provided }) => {
-    return (
-      <div className='flex p-1'>
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <div className={`${selectedSubject?.id == item.id ? 'border-2' : ''} rounded-md border-cclrs-secondary-dark overflow-hidden`}>
-            {getIcon(item, onExpand, onCollapse)}
-            <div
-              onDrop={(e) => {
-                e.preventDefault();
-                const receivedTopicId = e.dataTransfer.getData("topic_id");
-                if (item.id == selectedSubject.id) {
-                  return;
-                }
-                var confirmRevert = window.confirm(
-                  "Are you sure you want to move this topic to the subject " +
-                  item.name +
-                  "?"
-                );
-                if (!confirmRevert) return;
-                else reparentTopic(receivedTopicId, item.id);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-              }}
-              className='inline-flex h-full px-2.5 cursor-pointer bg-cclrs-bg-surface'
-              onClick={() => {
-                loadSelectedSubject(item.id);
-              }}
-            >
-              {item ? item.name : ""}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  useEffect(() => {
+    if (selectedSubjectId)
+      loadSelectedSubject(selectedSubjectId);
+  }, [selectedSubjectId])
 
   useEffect(() => {
     console.log("inside useffect")
-    loadSubjects();
+    loadSubjects(setNetworkLoading, setTreeData);
   }, []);
-
-  const loadSelectedSubject = async (subject_id) => {
-    if (selectedSubject != null && selectedSubject.id == subject_id) return;
-    if (pendingChanges) {
-      var confirmRevert = window.confirm(
-        "This subject has unsaved changes. They will be removed if you have not saved them yet. Are you sure you want to proceed?"
-      );
-      if (!confirmRevert) return;
-      else setPendingChanges(false);
-    }
-    setNetworkLoading(true);
-    console.log("fetching selected subject...");
-    const result = await subjectsAPIService.getSubjectDetail(subject_id);
-    if (!result.ok) return "Error: " + result.problem;
-    console.log(result.data);
-    setSelectedSubject(result.data);
-    setNetworkLoading(false);
-    return result.data;
-  };
 
   if (networkLoading) {
     return (
@@ -421,36 +244,36 @@ export default function Subjects(props) {
           when={pendingChanges}
           message="You have unsaved changes that will be forgotten. Are you sure you want to leave?"
         /> */}
-        <div className='min-w-[60%] flex leading-8 flex-col'>
-          <Button
-            backgroundColor={colors.yellowBG}
-            onClick={() => {
-              const subjectName = window.prompt("Enter new subject's name:");
-              if (subjectName === null) return;
-              onCreateSubject(subjectName, 1);
-            }}
-          >
-            Create Subject
-          </Button>
-          <div className=''>
-            <Tree
-              tree={treeData}
-              renderItem={renderItem}
-              onExpand={onExpand}
-              onCollapse={onCollapse}
-              onDragEnd={onDragEnd}
-              offsetPerLevel={PADDING_PER_LEVEL}
-              isDragEnabled
-              isNestingEnabled
-            />
+        <div className='w-full flex leading-8 flex-col'>
+          <div className='flex justify-between'>
+            <SectionHeader bar={false} className='mb-3 inline'>SUBJECTS </SectionHeader>
+            <Button
+              className={twColors.addContainer + 'w-fit text-xs uppercase'}
+              onClick={() => {
+                const subjectName = window.prompt("Enter new subject's name:");
+                if (subjectName === null) return;
+                onCreateSubject(subjectName, 1);
+              }}
+            >
+              Create New Subject
+            </Button>
           </div>
+          <SubjectTree
+            treeData={treeData}
+            setTreeData={setTreeData}
+            selectedSubjectId={selectedSubjectId}
+            setSelectedSubjectId={setSelectedSubjectId}
+            onDropTopicOnSubject={onDropTopicOnSubject}
+            onDropSubjectOnSubject={onDropSubjectOnSubject}
+            isNestingEnabled={true}
+          />
         </div>
         {selectedSubject && (
           <SubjectInfo
             data={selectedSubject}
             onCreateChild={onCreateSubject}
             onAddTopic={(topic_id) => {
-              reparentTopic(topic_id, selectedSubject.id);
+              onDropTopicOnSubject(topic_id, selectedSubject.id);
             }}
             onDataChange={(newData) => {
               setSelectedSubject({ ...selectedSubject, ...newData });

@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next';
 import React, { useEffect, useState } from 'react'
 import ListItemPath from '../../components/ListItems/ListItemPath';
-import ListItemTopic from '../../components/ListItems/ListItemTopic';
+import SanEDDButton from '../../components/Buttons/SanEDDButton';
 import Modal from '../../components/Modal';
 import dimensions from '../../config/dimensions';
 import { useRouter } from 'next/router';
@@ -61,28 +61,19 @@ function PathsGrid({ paths, onCreatedPath }) {
   }
 
   return (
-    <div
-      style={{
-        padding: dimensions.contentDistance,
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: "row",
-        gap: dimensions.contentDistance,
-      }}
-    >
+    <div className='flex p-3 flex-wrap gap-3' >
       {paths.map((item) => {
         return (
           <ListItemPath
             key={item.id}
             to={`paths/${item.id}`}
-            style={{ width: 200 }}
             published={item.published}
             title={item.title ? item.title : "No Title"}
             overline={item.about ? item.about : "No Description"}
           />
         );
       })}
-      <ListItemTopic
+      <SanEDDButton
         onClick={() => {
           createPath();
         }}

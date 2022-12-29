@@ -3,14 +3,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactQuill from "react-quill"; // ES6
 // import "react-quill/dist/quill.snow.css"; // ES6
-import colors from "../../config/colors";
 
 export default function MyTextEditor({
   sid,
   content,
   onChangeContent,
   placeholder = "Enter content of this theory section here...",
-  style,
+  className=''
 }) {
   const [newContent, setNewContent] = useState(content);
 
@@ -26,8 +25,12 @@ export default function MyTextEditor({
   }, [content]);
 
   return (
-    <textarea value={newContent} onChange={(e)=>{setNewContent(e.target.value)}} placeholder={placeholder} style={{...style,
-          backgroundColor: colors.bgSurface,}} />
+    <textarea
+      value={newContent}
+      onChange={(e) => { setNewContent(e.target.value) }}
+      placeholder={placeholder}
+      className={`bg-san-surface dark:bg-san-dark-surface text-san-on-surface dark:text-san-dark-on-surface ${className}`}
+    />
     // <ReactQuill
     //   style={{
     //     ...style,

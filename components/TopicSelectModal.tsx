@@ -1,64 +1,26 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import colors from "../config/colors";
-import dimensions from "../config/dimensions";
 import SectionHeader from "./Texts/SectionHeader";
-import Tree, { mutateTree, moveItemOnTree } from "@atlaskit/tree";
-import Spinner from "@atlaskit/spinner";
-import { breadString, makeSubjectAPIDataReadyForAtlaskit } from "../config/utils";
+import { breadString } from "../config/utils";
 import ListContainer from "./ListItems/ListContainer";
-import ListItemTopic from "./ListItems/ListItemTopic";
+import SanEDDButton from "./Buttons/SanEDDButton";
 import topicsAPIService from "../lib/APIServices/topicsAPIService";
 import subjectsAPIService from "../lib/APIServices/subjectsAPIService";
-import { Button, TextButton } from "./Button";
-
-const subjectsData = {
-  rootId: 1,
-  items: {
-    1: {
-      id: 1,
-      children: [],
-      hasChildren: false,
-      isExpanded: false,
-      isChildrenLoading: false,
-      name: "root",
-      display_name: "root",
-    },
-  },
-};
+import { Button } from "./Buttons/Button";
+import { loadSubjects, SubjectTree } from "./SubjectTree";
+import twColors from "../config/twColors";
+import { TiDelete } from "react-icons/ti";
+import { twMerge } from "tailwind-merge";
 
 export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
   const [tree, setTree] = useState(null);
   const [networkLoading, setNetworkLoading] = useState(true);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null);
+
   var breads = "";
   if (selectedSubject) breads = breadString(selectedSubject.breadcrumbs);
-
-  const loadSubjects = async () => {
-    setNetworkLoading(true);
-    console.log("fetching subjects...");
-    // await new Promise((r) => setTimeout(r, 2000));
-    const result = await subjectsAPIService.getRootLevelSubjects();
-    if (!result.ok) return "Error: " + result.problem;
-    console.log('received api response:', result.data);
-
-    var rootChildrenArray = [];
-    result.data.forEach((item) => {
-      // Add item to our base subjectsData array
-      subjectsData.items[item.id] = item;
-      // Configurations for base subjectsData array, which requires a root, we add these subjects to its root as children
-      rootChildrenArray.push(item.id);
-      subjectsData.items[subjectsData.rootId].hasChildren = true;
-      subjectsData.items[subjectsData.rootId].isExpanded = true;
-    })
-
-    subjectsData.items[subjectsData.rootId].children = rootChildrenArray;
-    console.log("Setting tree for the first time");
-    setTree(subjectsData);
-    setNetworkLoading(false);
-    return result.data;
-  };
 
   const loadSelectedSubject = async (subject_id) => {
     if (selectedSubject != null && selectedSubject.id == subject_id) return;
@@ -72,10 +34,6 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
     return result.data;
   };
 
-  useEffect(() => {
-    loadSubjects();
-  }, []);
-
   const createNewTopicAndCloseModal = async (name, subjectId) => {
     setNetworkLoading(true);
     const result = await topicsAPIService.createTopic(name, subjectId);
@@ -85,251 +43,120 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
     console.log("done");
   };
 
-  const PreTextIcon = ({
-    bgcolor = colors.secondaryLight,
-    onClick,
-    children,
-  }) => {
-    return (
-      <div
-        style={{
-          display: "inline-flex",
-          padding: "0px 15px",
-          backgroundColor: bgcolor,
-          cursor: "pointer",
-        }}
-        onClick={onClick}
-      >
-        {children}
-      </div>
-    );
-  };
-  const onExpand = async (itemId) => {
-    console.log("OnExpand on " + itemId);
+  useEffect(() => {
+    loadSubjects(setNetworkLoading, setTree);
+  }, []);
 
-    // 1. Marking the expanded item with `isChildrenLoading` flag
-    // setTree((tree) => mutateTree(tree, itemId, { isChildrenLoading: true }));
-    tree.items[itemId].isChildrenLoading = true;
-    setTree({ ...tree, ...tree });
-
-    // 2. Make the async server request
-    console.log("fetching children for " + itemId);
-    const result = await subjectsAPIService.getSubjectChildren(itemId);
-    if (!result.ok) return "Error: " + result.problem;
-    console.log(result.data);
-
-    // Add the received children to the tree data
-    result.data.forEach((item) => {
-      tree.items[item.id] = item;
-    });
-    // 3. When the result comes back we can mutate the tree.
-    //    It's important to get a fresh reference from the state.
-    const currentItem = tree.items[itemId];
-    if (currentItem.isChildrenLoading) {
-      currentItem.isExpanded = true;
-      currentItem.isChildrenLoading = false;
-    }
-    tree.items[itemId] = currentItem;
-    setTree({ ...tree, ...tree });
-    return result.data;
-  };
-  const onCollapse = (itemId) => {
-    setTree((tree) =>
-      mutateTree(tree, itemId, { isExpanded: false, isChildrenLoading: false })
-    );
-  };
-  const getIcon = (item, onExpand, onCollapse) => {
-    if (item.isChildrenLoading) {
-      return (
-        <PreTextIcon onClick={() => onCollapse(item.id)}>
-          <div>
-            <Spinner appearance="inherit" size={12} />
-          </div>
-        </PreTextIcon>
-      );
-    }
-    if (item.hasChildren) {
-      return item.isExpanded ? (
-        <PreTextIcon
-          bgcolor={colors.bgDefault}
-          onClick={() => onCollapse(item.id)}
-        >
-          -
-        </PreTextIcon>
-      ) : (
-        <PreTextIcon onClick={() => onExpand(item.id)}>+</PreTextIcon>
-      );
-    }
-    return <PreTextIcon bgcolor={colors.textDisabled}>&bull;</PreTextIcon>;
-  };
-  const PADDING_PER_LEVEL = 16;
-  const renderItem = ({ item, onExpand, onCollapse, provided }) => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          padding: 5,
-        }}
-      >
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <div
-            style={{
-              border: selectedSubject?.id == item.id ? "2px solid" : "",
-              borderRadius: 4,
-              borderColor: colors.secondaryDark,
-              overflow: "hidden",
-            }}
-          >
-            {getIcon(item, onExpand, onCollapse)}
-            <div
-              style={{
-                display: "inline-flex",
-                backgroundColor: colors.bgSurface,
-                height: "100%",
-                padding: "0px 10px",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                loadSelectedSubject(item.id);
-              }}
-            >
-              {item ? item.name : ""}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  useEffect(() => {
+    if (selectedSubjectId)
+      loadSelectedSubject(selectedSubjectId);
+  }, [selectedSubjectId])
 
   return (
     <div>
       {ReactDOM.createPortal(
+        // The Whole Screen
         <div
-          style={{
-            position: "fixed",
-            width: "100%",
-            height: "100%",
-            left: 0,
-            top: 0,
-            backdropFilter: "blur(8px)",
-          }}
+          className='fixed w-full h-full left-0 top-0 backdrop-blur bg-black/50 flex justify-center items-center'
         >
+          {/* The Window */}
           <div
-            style={{
-              // backgroundColor: "red",
-              display: "inline-flex",
-              width: "100%",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className={twMerge(twColors.primaryContainer + ' w-[80%] h-[80%] flex flex-col p-3 rounded-sm border ')}
           >
+            {/* Top Area - Heading and Close Button */}
+            <div className="flex justify-between items-center">
+              <SectionHeader bar={false} className='uppercase text-xl'>{heading}</SectionHeader>
+              <div className="text-4xl leading-none flex cursor-pointer" title='Close Window'>
+                <TiDelete
+                  onClick={onCancel}
+                  className={twColors.cross}
+                />
+                {/* &ndash; */}
+              </div>
+            </div>
+
+            {/* Bottom Area - Content */}
             <div
-              style={{
-                backgroundColor: colors.bgSurface,
-                borderRadius: 2,
-                width: "80%",
-                height: "80%",
-                display: "flex",
-                flexDirection: "column",
-                padding: dimensions.contentDistance,
-              }}
+              className="flex h-full mt-2.5 justify-between"
             >
-              <SectionHeader>{heading}</SectionHeader>
-              {/* Content */}
+
+              {/* Left Area - Subject Tree */}
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexGrow: 1,
-                  marginTop: dimensions.contentDistance,
-                  marginBottom: dimensions.contentDistance,
-                }}
+                className={twMerge(twColors.surface2+'h-full overflow-y-auto w-full leading-8 p-1 rounded-md border shadow-inner')}
               >
-                <div
-                  style={{
-                    maxHeight: 500,
-                    flexGrow: 1,
-                    overflow: "scroll",
-                    backgroundColor: colors.bgDisabled,
-                    lineHeight: 2,
-                  }}
-                >
-                  {networkLoading ? (
-                    "Loading..."
-                  ) : (
-                    <Tree
-                      tree={tree}
-                      renderItem={renderItem}
-                      onExpand={onExpand}
-                      onCollapse={onCollapse}
-                      offsetPerLevel={PADDING_PER_LEVEL}
-                    />
+                {networkLoading ? (
+                  "Loading..."
+                ) : (
+                  <SubjectTree
+                    treeData={tree}
+                    setTreeData={setTree}
+                    selectedSubjectId={selectedSubjectId}
+                    setSelectedSubjectId={setSelectedSubjectId}
+                  />
+                )}
+              </div>
+
+              {/* <div className="bg-red-200 w-[50%]">
+                aa
+              </div> */}
+              {/* Right Area - Subject Topics Display */}
+              <div
+                className="w-[50%]"
+              >
+                <div className="ml-2 h-full flex flex-col justify-between">
+                  <ListContainer className={twMerge(twColors.surface3+' border-current shadow-lg')}>
+                    {selectedSubject ? (
+                      <>
+                        <SectionHeader bar={false} className='uppercase'>{selectedSubject.name}</SectionHeader>
+                        <SectionHeader>TOPICS</SectionHeader>
+                        {selectedSubject.topics.map((item) => {
+                          return (
+                            <SanEDDButton
+                              key={item.id}
+                              overline={item.about}
+                              title={item.title}
+                              onClick={() => {
+                                setSelectedTopic({
+                                  ...selectedTopic,
+                                  ...item,
+                                });
+                              }}
+                              selected={selectedTopic?.id === item.id}
+                            />
+                          );
+                        })}
+                        <SectionHeader>ACTIONS ON SUBJECT</SectionHeader>
+                        <SanEDDButton
+                          overline={"Create New"}
+                          title={"TOPIC"}
+                          className={twColors.addContainer}
+                          onClick={() => {
+                            const topicName = window.prompt(
+                              "Enter new topic's name:"
+                            );
+                            if (topicName === null) return;
+                            createNewTopicAndCloseModal(
+                              topicName,
+                              selectedSubject.id
+                            );
+                          }}
+                        />
+                      </>
+                    ) : <div>Select a subject to list its topics</div>}
+                  </ListContainer>
+                  {selectedTopic && (
+                    <Button
+                      className={twColors.add + ' self-end shadow-lg '}
+                      onClick={() => {
+                        onSelectTopic(selectedTopic);
+                      }}
+                    >
+                      Select {selectedTopic.title}
+                    </Button>
                   )}
                 </div>
-                {selectedSubject && (
-                  <div className="overflow-y-scroll min-w-[225px]"
-                  // style={{ overflowY: "scroll", minWidth: 225 }}
-                  >
-                    <ListContainer>
-                      <SectionHeader>{selectedSubject.name}</SectionHeader>
-                      <SectionHeader>Topics</SectionHeader>
-                      {selectedSubject.topics.map((item) => {
-                        return (
-                          <ListItemTopic
-                            key={item.id}
-                            overline={item.about}
-                            title={item.title}
-                            onClick={() => {
-                              setSelectedTopic({
-                                ...selectedTopic,
-                                ...item,
-                              });
-                            }}
-                            selected={selectedTopic?.id === item.id}
-                          />
-                        );
-                      })}
-                      <ListItemTopic
-                        overline={"Add New"}
-                        title={"TOPIC"}
-                        onClick={() => {
-                          const topicName = window.prompt(
-                            "Enter new topic's name:"
-                          );
-                          if (topicName === null) return;
-                          createNewTopicAndCloseModal(
-                            topicName,
-                            selectedSubject.id
-                          );
-                        }}
-                      />
-                    </ListContainer>
-                  </div>
-                )}
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <TextButton
-                  style={{ display: "inline-flex" }}
-                  onClick={onCancel}
-                >
-                  Close
-                </TextButton>
-                {selectedTopic && (
-                  <TextButton
-                    style={{ display: "inline-flex" }}
-                    onClick={() => {
-                      onSelectTopic(selectedTopic);
-                    }}
-                  >
-                    Select {selectedTopic.title}
-                  </TextButton>
-                )}
-              </div>
+
             </div>
           </div>
         </div>,

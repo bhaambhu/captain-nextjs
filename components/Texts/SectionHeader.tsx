@@ -1,21 +1,10 @@
 import React from 'react'
-import colors from '../../config/colors';
-import fonts from '../../config/fonts';
+import { twMerge } from 'tailwind-merge';
 
-export default function SectionHeader(props) {
+export default function SectionHeader({ className = '', bar = true, ...props }) {
   return (
     <div
-      className='font-overline text-cclrs-dark-weak text-sm'
-      // style={{
-      //   justifyContent: "center",
-      //   alignContent: "center",
-      //   // display: "flex",
-      //   flexDirection: "row",
-      //   flex: 1,
-      //   fontFamily: fonts.overline,
-      //   color: colors.textWeak,
-      //   fontSize: 14,
-      // }}
+      className={twMerge(`font-overline text-sm ${bar ? 'border-t border-current mt-2 pt-3 border-dashed' : ''} ${className}`)}
       {...props}
     />
   );

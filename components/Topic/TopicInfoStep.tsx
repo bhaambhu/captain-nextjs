@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { stepType } from "../../config/enums";
-import { Button, TextButton } from "../Button"
-import ListItemTopic from "../ListItems/ListItemTopic";
+import { Button } from "../Buttons/Button"
+import SanEDDButton from "../Buttons/SanEDDButton";
 import ListContainer from "../ListItems/ListContainer";
 import SectionHeader from "../Texts/SectionHeader";
 import colors from "../../config/colors";
@@ -10,9 +9,9 @@ import { breadString } from "../../config/utils";
 import Modal from "../Modal";
 import TopicSelectModal from "../TopicSelectModal";
 import SubjectSelectModal from "../SubjectSelectModal";
-import dimensions from "../../config/dimensions";
 import APIEndpoints from "../../config/APIEndpoints";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
+import twColors from "../../config/twColors";
 
 const topic_example = {
   breadcrumbs: [
@@ -94,7 +93,7 @@ export default function TopicInfoStep({
     return (
       // <JSONViewer heading={"Topic Info Step Data"}>{topicData}</JSONViewer>
 
-      <ListContainer>
+      <ListContainer className={twColors.surface3}>
         {showTopicSelector && (
           <TopicSelectModal
             heading={"Select Topic"}
@@ -133,35 +132,38 @@ export default function TopicInfoStep({
             }}
           />
         )}
-        <ListItemTopic
+        {/* Topic Title Field */}
+        <SanEDDButton
           overline="TITLE"
           placeholder="Enter Topic Title"
+          className={twColors.inputField}
           title={topicData.title}
           onChange={(newValue) => {
             topicData.title = newValue;
             onTopicDataChange(topicData);
           }}
         />
-        <ListItemTopic
+        <SanEDDButton
           overline="ABOUT"
           placeholder="Enter a short description about topic."
+          className={twColors.inputField}
           title={topicData.about}
           onChange={(newValue) => {
             topicData.about = newValue;
             onTopicDataChange(topicData);
           }}
         />
-        <SectionHeader>PARENT</SectionHeader>
+        <SectionHeader>SUBJECT</SectionHeader>
         <p className="">
           {breadString(topicData.breadcrumbs, true)}
         </p>
         <Button
-          backgroundColor={colors.errorBg}
+          className={twColors.removeContainer}
           onClick={() => {
             setShowSubjectSelector(true);
           }}
         >
-          Edit Parent
+          Change Subject
         </Button>
         <SectionHeader>REQUIRES</SectionHeader>
         {
@@ -187,7 +189,7 @@ export default function TopicInfoStep({
           }}
         />
         <Button
-          backgroundColor={colors.yellowBG}
+          className={twColors.addContainer}
           onClick={() => {
             setShowTopicSelector(true);
           }}
@@ -196,7 +198,7 @@ export default function TopicInfoStep({
         </Button>
         <SectionHeader>ACTIONS</SectionHeader>
         <Button
-          backgroundColor={colors.errorBg}
+          className={twColors.deleteContainer}
           onClick={() => {
             var confirmDelete = window.confirm(
               "Are you sure you want to delete this topic?"
@@ -208,8 +210,7 @@ export default function TopicInfoStep({
         >
           Delete This Topic
         </Button>
-        <SectionHeader>JSON View</SectionHeader>
-        <JSONViewer>{topicData}</JSONViewer>
+        <JSONViewer heading={'JSON View'}>{topicData}</JSONViewer>
       </ListContainer>
     );
 }
@@ -217,22 +218,16 @@ export default function TopicInfoStep({
 function TopicsGrid({ topics, onDeleteTopic, navigation = true }) {
   return (
     <div
-      style={{
-        // padding: dimensions.contentDistance,
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: "row",
-        gap: dimensions.contentDistance,
-      }}
+      className="flex flex-wrap gap-3"
     >
       {topics.map((item) => {
         return (
-          <ListItemTopic
+          <SanEDDButton
             key={item.id}
             topicToSubjectDraggable={true}
             topic_id={item.id}
             to={navigation ? APIEndpoints.TOPICS + item.id : ''}
-            style={{ width: 200 }}
+            className="w-[200px]"
             title={item.title}
             overline={item.about}
             onDelete={

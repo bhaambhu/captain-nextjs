@@ -1,39 +1,12 @@
 import React from "react";
-import { Button } from "../Button";
-import ListItemTopic from "../ListItems/ListItemTopic";
+import { Button } from "../Buttons/Button";
+import SanEDDButton from "../Buttons/SanEDDButton";
 import ListContainer from "../ListItems/ListContainer";
 import SectionHeader from "../Texts/SectionHeader";
 import colors from "../../config/colors";
 import JSONViewer from "../JSONViewer";
-import Switch from "react-switch";
 import Toggle from "../Toggle";
-
-const topic_example = {
-  breadcrumbs: [
-    {
-      title: "Computer Science",
-      id: 1,
-    },
-    {
-      title: "Fundamentals",
-      id: 2,
-    },
-    {
-      title: "Algorithms and structures",
-      id: 3,
-    },
-    {
-      title: "Intro to algorithms",
-      id: 4,
-    },
-  ],
-  title: "The big O notation",
-  timeLength: "9 minutes",
-  problemsSolved: "0 / 1 problems solved",
-  difficulty: "Medium",
-  about:
-    "About this topic. This is a very subtle topic. Alright alright alright.",
-};
+import twColors from "../../config/twColors";
 
 export default function PathInfoStep({
   pathData,
@@ -41,19 +14,21 @@ export default function PathInfoStep({
   onDeletePath,
 }) {
   return (
-    <ListContainer>
-      <ListItemTopic
+    <ListContainer className={twColors.surface2}>
+      <SanEDDButton
         overline="TITLE"
         placeholder="Enter Path Title"
+        className={twColors.inputField}
         title={pathData.title}
         onChange={(newValue) => {
           pathData.title = newValue;
           onPathDataChange(pathData);
         }}
       />
-      <ListItemTopic
+      <SanEDDButton
         overline="ABOUT"
         placeholder="Enter a short description about this path."
+        className={twColors.inputField}
         title={pathData.about}
         onChange={(newValue) => {
           pathData.about = newValue;
@@ -74,6 +49,7 @@ export default function PathInfoStep({
       <SectionHeader>ACTIONS</SectionHeader>
       <Button
         backgroundColor={colors.errorBg}
+        className={twColors.deleteContainer}
         onClick={() => {
           var confirmDelete = window.confirm(
             "Are you sure you want to delete this path?"

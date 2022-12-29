@@ -3,7 +3,7 @@ import React from 'react'
 
 const Header = () => {
     return (
-        <header className="text-gray-600 sticky z-10 top-0 bg-white border-b-2">
+        <header className="sticky z-10 top-0 bg-san-surface text-san-on-surface dark:bg-san-dark-surface dark:text-san-dark-on-surface border-b-2">
             <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
                 <Link href={'/'} legacyBehavior><a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-purple-500 rounded-full" viewBox="0 0 24 24">

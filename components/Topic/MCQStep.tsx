@@ -1,12 +1,13 @@
 import React from "react";
 import { stepType } from "../../config/enums";
-import ListItemTopic from "../ListItems/ListItemTopic";
+import SanEDDButton from "../Buttons/SanEDDButton";
 import ListContainer from "../ListItems/ListContainer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SectionHeader from "../Texts/SectionHeader";
 import ListItemTheorySection from "../ListItems/ListItemTheorySection";
 import ListItemMCQOption from "../ListItems/ListItemMCQOption";
 import MyTextEditor from "../TextEditors/MyTextEditor";
+import twColors from "../../config/twColors";
 
 const example = {
   sid: 1,
@@ -91,12 +92,13 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
       <Droppable droppableId="droppable-1">
         {(provided, _) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            <ListContainer style={{ flex: 1 }}>
+            <ListContainer className={twColors.surface3}>
               <ListItemTheorySection
                 theorySectionData={{
                   title: mcqStepData.title,
                   content: mcqStepData.content,
                 }}
+                
                 titlePlaceholder="Enter MCQ Title"
                 contentPlaceholder="Enter question here..."
                 sid={mcqStepData.sid}
@@ -127,6 +129,7 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                               ? "0 0 .4rem #666"
                               : "none",
                           }}
+                          className="w-full"
                           mcqOptionData={option}
                           sid={mcqStepData.sid}
                           onMCQOptionDataChange={(option) => {
@@ -157,7 +160,7 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                 );
               })}
               {provided.placeholder}
-              <ListItemTopic
+              <SanEDDButton
                 onClick={() => {
                   let newOptions = mcqStepData.options
                     ? mcqStepData.options
@@ -170,29 +173,22 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                   onMCQStepDataChange(mcqStepData);
                   // setSections((sections) => [...newSections]);
                 }}
-                title="Add Option"
+                className={twColors.addContainer+' w-fit '}
+                overline="Add"
+                title="Another Option"
               />
+              {/* Explanation Section */}
               <SectionHeader>Explanation</SectionHeader>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  overflow: "clip",
-                  flexDirection: "row",
+              <MyTextEditor
+                placeholder="Enter any explanations for this question and how we can solve it to reach the correct answer."
+                className="w-full border border-current rounded-sm p-1"
+                content={mcqStepData.explanation}
+                sid={mcqStepData.sid}
+                onChangeContent={(content) => {
+                  mcqStepData.explanation = content;
+                  onMCQStepDataChange(mcqStepData);
                 }}
-              >
-                <div style={{ flex: 1 }}>
-                  <MyTextEditor
-                    placeholder="Enter any explanations for this question and how we can solve it to reach the correct answer."
-                    content={mcqStepData.explanation}
-                    sid={mcqStepData.sid}
-                    onChangeContent={(content) => {
-                      mcqStepData.explanation = content;
-                      onMCQStepDataChange(mcqStepData);
-                    }}
-                  />
-                </div>
-              </div>
+              />
             </ListContainer>
           </div>
         )}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import dimensions from "../../config/dimensions";
-import ListItemTopic from "../../components/ListItems/ListItemTopic";
+import SanEDDButton from "../../components/Buttons/SanEDDButton";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
 import SectionHeader from "../../components/Texts/SectionHeader";
 import APIEndpoints from "../../config/APIEndpoints";
@@ -38,7 +38,7 @@ export default function Topics() {
         </SectionHeader>
         {orphanTopics.map((item) => {
           return (
-            <ListItemTopic
+            <SanEDDButton
               key={item.id}
               to={APIEndpoints.TOPICS + item.id}
               style={{ width: 200 }}

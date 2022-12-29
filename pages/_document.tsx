@@ -7,10 +7,11 @@ class MainDocument extends Document {
   }
 
   render() {
+    
     return (
       <Html>
         <Head />
-        <body>
+        <body className="bg-san-background dark:bg-san-dark-background">
           <Main />
           <NextScript />
           {/*Below we add the modal wrapper*/}

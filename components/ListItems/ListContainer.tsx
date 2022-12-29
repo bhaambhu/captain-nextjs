@@ -1,17 +1,10 @@
 import React from "react";
-import colors from "../../config/colors";
+import { twMerge } from "tailwind-merge";
 
-export default function ListContainer({ style, ...otherProps }) {
+export default function ListContainer({ className='', ...otherProps }) {
   return (
     <div
-      style={{
-        padding: 10,
-        backgroundColor: colors.bgDefault,
-        gap: 10,
-        display: "flex",
-        flexDirection: "column",
-        ...style,
-      }}
+      className={twMerge(`p-2 border rounded-sm flex flex-col gap-2 ${className}`)}
       {...otherProps}
     />
   );

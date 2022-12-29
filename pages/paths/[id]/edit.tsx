@@ -11,10 +11,12 @@ import pathsAPIService from '../../../lib/APIServices/pathsAPIService';
 import useApi from '../../../lib/useAPI';
 import PathInfoStep from '../../../components/Path/PathInfoStep';
 import ListContainer from '../../../components/ListItems/ListContainer';
-import ListItemTopic from '../../../components/ListItems/ListItemTopic';
+import SanEDDButton from '../../../components/Buttons/SanEDDButton';
 import SectionHeader from '../../../components/Texts/SectionHeader';
 import colors from '../../../config/colors';
 import TopicSelectModal from '../../../components/TopicSelectModal';
+import { Button } from '../../../components/Buttons/Button';
+import twColors from '../../../config/twColors';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 //   try {
@@ -31,7 +33,7 @@ import TopicSelectModal from '../../../components/TopicSelectModal';
 
 export default function Path() {
   const router = useRouter();
-  const {id : pathID} = router.query;
+  const { id: pathID } = router.query;
   const [showTopicSelector, setShowTopicSelector] = useState(false);
   const [topicUnsavedChanges, setTopicUnsavedChanges] = useState(false);
   const [pathUnsavedChanges, setPathUnsavedChanges] = useState(false);
@@ -60,12 +62,12 @@ export default function Path() {
   };
 
   useEffect(() => {
-    if(!router.isReady) return;
+    if (!router.isReady) return;
     console.log('loading now')
     loadPath(pathID);
   }, [pathID, router.isReady]);
 
-  if(!pathDetailsAPI.loadedOnce) return <Modal/>
+  if (!pathDetailsAPI.loadedOnce) return <Modal />
 
   // return(
   //   <div>
@@ -75,11 +77,7 @@ export default function Path() {
 
   return (
     <div
-      style={{
-        padding: dimensions.contentDistance,
-        display: "flex",
-        gap: 10,
-      }}
+      className='flex gap-2.5 p-3'
     >
       {showTopicSelector && (
         <TopicSelectModal
@@ -127,8 +125,9 @@ export default function Path() {
         when={pathUnsavedChanges || topicUnsavedChanges}
         message="You have unsaved changes that will be forgotten. Are you sure you want to leave?"
       /> */}
+
       {/* Left side section */}
-      <div style={{ minWidth: 200, maxWidth: 200 }}>
+      <div className='max-w-[200px]'>
         <DragDropContext
           onDragEnd={(param) => {
             const srcI = param.source.index;
@@ -159,9 +158,11 @@ export default function Path() {
           <Droppable droppableId="droppable-1">
             {(provided, _) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <ListContainer>
+                <ListContainer
+                  className={twColors.surface1}
+                >
                   {/* Info list item */}
-                  <ListItemTopic
+                  <SanEDDButton
                     onClick={() => {
                       if (topicUnsavedChanges) {
                         var confirmRevert = window.confirm(
@@ -177,11 +178,11 @@ export default function Path() {
                         id: null,
                       });
                     }}
-                    overline="Edit Information"
+                    overline="Edit Path"
                     title={pathDetailsAPI.data.title}
                     selected={selectedTopic.stepType === stepType.Info}
                   />
-                  <SectionHeader>TOPICS</SectionHeader>
+                  <SectionHeader>TOPICS IN PATH</SectionHeader>
                   {pathDetailsAPI.data.topic_sequence.map((item, i) => {
                     return (
                       <Draggable
@@ -198,7 +199,7 @@ export default function Path() {
                             }}
                           >
                             {/* List Item for Step (Theory/MCQ) */}
-                            <ListItemTopic
+                            <SanEDDButton
                               {...provided.dragHandleProps}
                               style={{
                                 ...provided.draggableProps.style,
@@ -206,11 +207,12 @@ export default function Path() {
                                   ? "0 0 .4rem #666"
                                   : "none",
                               }}
+                              className='w-full'
                               overline={"Topic"}
                               title={item.topic.title}
                               onDelete={() => {
                                 var confirmDelete = window.confirm(
-                                  "Are you sure you want to remove this topic from this track?"
+                                  "Are you sure you want to remove this topic from this path?"
                                 );
                                 if (confirmDelete) {
                                   if (selectedTopic.id == item.topic.id) {
@@ -272,35 +274,34 @@ export default function Path() {
                     );
                   })}
                   {provided.placeholder}
-                  <div
-                    style={{ display: "flex", gap: 10, flexDirection: "row" }}
-                  >
-                    <ListItemTopic
+                  <div>
+                    {/* <Button
                       onClick={() => {
                         setShowTopicSelector(true);
                       }}
-                      style={{ backgroundColor: colors.yellowBG }}
-                      overline="Add"
-                      title="TOPIC"
-                      // style={{ flex: 1 }}
-                    />
-                    {/* <ListItemTopic
+                      className="bg-san-additem-container w-fit text-san-on-additem-container border-san-on-additem-container"
+                    >Add Topic</Button> */}
+                    <SanEDDButton
                       onClick={() => {
-                        alert("add logic to add new/existing topic");
+                        setShowTopicSelector(true);
                       }}
-                      overline="Add Topic"
-                      title="NEW"
-                    /> */}
+                      overline="Add"
+                      className={twColors.add}
+                      title="TOPIC"
+                    />
                   </div>
                   {pathUnsavedChanges && (
-                    <ListItemTopic
-                      onClick={() => {
-                        savePath(pathDetailsAPI.data);
-                      }}
-                      style={{ backgroundColor: colors.greenBGDark }}
-                      overline="Path Modified"
-                      title="SAVE PATH ONLINE"
-                    />
+                    <>
+                      <SectionHeader>ACTIONS</SectionHeader>
+                      <SanEDDButton
+                        onClick={() => {
+                          savePath(pathDetailsAPI.data);
+                        }}
+                        className={twColors.unsaved}
+                        overline="Unsaved Changes"
+                        title="SAVE PATH ONLINE"
+                      />
+                    </>
                   )}
                 </ListContainer>
               </div>
@@ -308,12 +309,10 @@ export default function Path() {
           </Droppable>
         </DragDropContext>
       </div>
+
       {/* Right section */}
       <div
-        style={{
-          display: "flex",
-          flex: 1,
-        }}
+        className="flex flex-1"
       >
         {selectedTopic.stepType === stepType.Info ? (
           <PathInfoStep

@@ -1,17 +1,20 @@
 import React from 'react'
-import colors from '../config/colors'
+import { twMerge } from 'tailwind-merge';
 import routes from '../config/routes'
+import twColorTheme from '../config/twColors';
+import DarkModeToggle from './DarkModeToggle';
 import Logo from './Logo'
 import NavBarLink from './NavBarLink'
 
 function Navbar() {
   let user: Boolean = false;
   return (
-    <div className='bg-cclrs-bg-surface p-5'>
+    <div className={twMerge(twColorTheme.twNavbarColors + 'p-5')}>
       <div className='flex'>
         <Logo>Captain</Logo>
+        <DarkModeToggle />
         <div
-          className='border-l h-8 ml-4 pl-4 gap-2.5 flex border-cclrs-bg-disabled items-center'
+          className='border-l border-current h-8 ml-4 pl-4 gap-2.5 flex items-center'
         >
           <NavBarLink to={routes.HOME}>Home</NavBarLink>
           <NavBarLink to={routes.DATA}>Data</NavBarLink>
