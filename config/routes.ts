@@ -3,6 +3,7 @@ export default Object.freeze({
   REGISTER: "/register",
   HOME: "/",
   DATA: "/data",
+  USERS: "/users",
   EXAMS: "/exams",
   PATHS: "/paths",
   TOPICS: "/topics",

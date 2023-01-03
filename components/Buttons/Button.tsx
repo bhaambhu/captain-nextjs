@@ -5,18 +5,18 @@ function Clickable({ className = '', children, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={twMerge(`cursor-pointer font-overline text-cclrs-dark-strong self-start ${className}`)}
+      className={twMerge(`cursor-pointer font-overline text-san-on-surface dark:text-san-dark-on-surface self-start ${className}`)}
     >
       {children}
     </div>
   );
 }
 
-function Button({ className = '', ...props }) {
+function Button({ className = '', onClick, ...props }) {
   return (
     <Clickable
-      onClick={props.onClick}
-      className={twMerge(`bg-cclrs-bg-surface border rounded-sm border-cclrs-dark-strong p-1.5 ${className}`)}
+      onClick={onClick}
+      className={twMerge(`bg-san-surface dark:bg-san-dark-surface border rounded-sm border-current p-1.5 ${className}`)}
       {...props}
     >
       {props.children}

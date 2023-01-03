@@ -1,10 +1,11 @@
 import React from 'react'
+import { twMerge } from 'tailwind-merge';
 import SectionHeader from './Texts/SectionHeader';
 
-export default function JSONViewer({ heading, children }) {
+export default function JSONViewer({ heading=null, children, className='' }) {
   return (
     <div
-      className='table table-fixed w-full'
+      className={twMerge('table table-fixed w-full ' + className)}
     >
       {heading && <SectionHeader>{heading}</SectionHeader>}
       <pre

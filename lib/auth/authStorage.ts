@@ -3,6 +3,27 @@ import jwtDecode from "jwt-decode";
 const accessTokenKey = "accessToken";
 const refreshTokenKey = "refreshToken";
 
+// save to storage on client side (after checking window object)
+const saveToStorage = async (key, value) => {
+  if(typeof window !== 'undefined') {
+      return window.localStorage.setItem(key, value);
+  }
+}
+
+// get from storage on client side (after checking window object)
+const getFromStorage = async (key) => {
+  if (typeof window !== 'undefined') {
+      return window.localStorage.getItem(key);
+  }
+}
+
+// remove from storage on client side (after checking window object)
+const removeFromStorage = async (key) => {
+  if (typeof window !== 'undefined') {
+      return window.localStorage.removeItem(key);
+  }
+}
+
 const getUser = async () => {
   const token = await getAccessToken();
   return token ? jwtDecode(token) : null;
@@ -10,7 +31,7 @@ const getUser = async () => {
 
 const storeAccessToken = async (token) => {
   try {
-    await localStorage.setItem(accessTokenKey, token);
+    await saveToStorage(accessTokenKey, token);
   } catch (error) {
     console.log("Error storing access token", error);
   }
@@ -18,7 +39,7 @@ const storeAccessToken = async (token) => {
 
 const storeRefreshToken = async (token) => {
   try {
-    await localStorage.setItem(refreshTokenKey, token);
+    await saveToStorage(refreshTokenKey, token);
   } catch (error) {
     console.log("Error storing refresh token", error);
   }
@@ -31,7 +52,7 @@ const storeTokens = async (accessToken, refreshToken) => {
 
 const removeAccessToken = async () => {
   try {
-    await localStorage.removeItem(accessTokenKey);
+    await removeFromStorage(accessTokenKey);
   } catch (error) {
     console.log("Error removing access token", error);
   }
@@ -39,7 +60,7 @@ const removeAccessToken = async () => {
 
 const removeRefreshToken = async () => {
   try {
-    await localStorage.removeItem(refreshTokenKey);
+    await removeFromStorage(refreshTokenKey);
   } catch (error) {
     console.log("Error removing refresh token", error);
   }
@@ -52,7 +73,7 @@ const removeTokens = async () => {
 
 const getAccessToken = async () => {
   try {
-    return await localStorage.getItem(accessTokenKey);
+    return await getFromStorage(accessTokenKey);
   } catch (error) {
     console.log("Error getting access token", error);
   }
@@ -60,7 +81,7 @@ const getAccessToken = async () => {
 
 const getRefreshToken = async () => {
   try {
-    return await localStorage.getItem(refreshTokenKey);
+    return await getFromStorage(refreshTokenKey);
   } catch (error) {
     console.log("Error getting refresh token", error);
   }

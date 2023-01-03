@@ -1,13 +1,4 @@
 export default Object.freeze({
-  twAddButtonColors: '',
-  twDeleteButtonColors: '',
-  twRemoveButtonColors: '',
-  twUnsavedButtonColors: '',
-  twSurfaceOneColors: '',
-  twSurfaceTwoColors: '',
-  twSurfaceThreeColors: '',
-  twBackgroundColors: '',
-
   twNavbarColors: ' bg-san-surface text-san-on-surface dark:bg-san-dark-surface dark:text-san-dark-on-surface ',
   twNavbarLinkColors: {
     current: ' text-san-primary dark:text-san-dark-primary ',
@@ -39,7 +30,12 @@ export default Object.freeze({
   unsaved: ' bg-san-unsaved dark:bg-san-dark-unsaved text-san-on-unsaved dark:text-san-dark-on-unsaved border-san-unsaved-container ',
   unsavedContainer: ' bg-san-unsaved-container dark:bg-san-dark-unsaved-container text-san-on-unsaved-container dark:text-san-dark-on-unsaved-container border-current ',
 
+  error: ' bg-san-error dark:bg-san-dark-error text-san-on-error dark:text-san-dark-on-error border-san-error-container ',
+  errorContainer: ' bg-san-error-container dark:bg-san-dark-error-container text-san-on-error-container dark:text-san-dark-on-error-container border-current ',
+
   inputField: ' bg-san-surface text-san-on-surface dark:bg-san-dark-surface dark:text-san-dark-on-surface border-current ',
+
+  inputFieldReadonly: ' bg-san-surface-variant text-san-on-surface-variant dark:bg-san-dark-surface-variant dark:text-san-dark-on-surface-variant border-current ',
 
   // For CheckboxPill Element
   checked: ' bg-blue-500 accent-blue-500 text-san-on-primary ',

@@ -20,7 +20,27 @@ const useAuth = () => {
     authStorage.removeTokens();
   };
 
-  return { logIn, logOut, user, setUser };
+  // Helper methods to control page access
+  const isAuthenticated = () => {
+    return user ? true : false;
+  }
+
+  // Helper methods to control page access
+  const isStaff = () => {
+    return user?.is_staff;
+  }
+
+  // Helper methods to control page access
+  const isSuperUser = () => {
+    return user?.is_superuser;
+  }
+
+  // Helper methods to control page access
+  const isActivated = () => {
+    return user?.is_active;
+  }
+  
+  return { logIn, logOut, user, setUser, isAuthenticated, isStaff, isSuperUser, isActivated };
 };
 
 export default useAuth;

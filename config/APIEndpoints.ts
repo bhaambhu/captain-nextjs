@@ -4,6 +4,8 @@ export default Object.freeze({
   TOKEN_REFRESH: "token/refresh/",
   LOGIN: "token/",
   REGISTER: "user/register/",
+  ALL_USERS: "user/all/",
+  USER_INFO: "user/info/",
 
   TOPICS: "topics/",
   ORPHANTOPICS: "topics/orphans/",

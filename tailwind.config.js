@@ -9,6 +9,21 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+        text: 'text 2s linear infinite',
+      },
+      keyframes: {
+        text: {
+          '0%': {
+            'background-size': '1000% 1000%',
+            'background-position': 'right center',
+          },
+          '100%': {
+            'background-size': '1000% 1000%',
+            'background-position': 'left center',
+          },
+        },
+      },
       fontFamily: {
         logo: ["old_english"],
         h1_headline: ["mw_black"],

@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma";
 
 function breadString(breadcrumbs, includeSelf = false) {
-  let iterateUpto = includeSelf ? breadcrumbs.length : breadcrumbs.length -1;
+  let iterateUpto = includeSelf ? breadcrumbs.length : breadcrumbs.length - 1;
   var theString = "";
   for (let i = 1; i < iterateUpto; i++) {
     theString = theString + breadcrumbs[i].name + " ";
@@ -13,6 +13,10 @@ function breadString(breadcrumbs, includeSelf = false) {
   //   if (i > 0) theString = theString + " > ";
   // }
   return theString;
+}
+
+function viewableDateTime(input) {
+  return new Date(input).toLocaleString([], {day:"numeric", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", hour12: true});
 }
 
 // It modifies the API received subjects data so that it can be used by atlaskit/tree library, by
@@ -38,4 +42,4 @@ function makeSubjectAPIDataReadyForAtlaskit(apiReceivedSubjectData) {
 //   `
 // }
 
-export { breadString, makeSubjectAPIDataReadyForAtlaskit };
+export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime };
