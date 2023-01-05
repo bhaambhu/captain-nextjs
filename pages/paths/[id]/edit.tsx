@@ -1,8 +1,6 @@
-import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import React, { useEffect, useState } from 'react'
-import JSONViewer from '../../../components/JSONViewer';
+import { useEffect, useState } from 'react';
 import TopicEditor from '../../../components/Topic/TopicEditor';
 import { stepType } from '../../../config/enums';
 import pathsAPIService from '../../../lib/APIServices/pathsAPIService';
@@ -11,13 +9,12 @@ import PathInfoStep from '../../../components/Path/PathInfoStep';
 import ListContainer from '../../../components/ListItems/ListContainer';
 import SanEDDButton from '../../../components/Buttons/SanEDDButton';
 import SectionHeader from '../../../components/Texts/SectionHeader';
-import colors from '../../../config/colors';
 import TopicSelectModal from '../../../components/TopicSelectModal';
-import { Button } from '../../../components/Buttons/Button';
 import twColors from '../../../config/twColors';
 import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
 import useAuth from '../../../lib/auth/useAuth';
 import routes from '../../../config/routes';
+import InfoPill from '../../../components/Pills/InfoPill';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 //   try {
@@ -222,6 +219,7 @@ export default function Path() {
                     selected={selectedTopic.stepType === stepType.Info}
                   />
                   <SectionHeader>TOPICS IN PATH</SectionHeader>
+                  {pathDetailsAPI.data.topic_sequence.length > 1 && <InfoPill message="Drag to re-order" />}
                   {pathDetailsAPI.data.topic_sequence.map((item, i) => {
                     return (
                       <Draggable
@@ -273,7 +271,7 @@ export default function Path() {
                                   setPathUnsavedChanges(true);
                                 }
                               }}
-                              draggable
+                              dragIcon
                               onClick={() => {
                                 if (selectedTopic.id == item.topic.id) return;
                                 if (topicUnsavedChanges) {

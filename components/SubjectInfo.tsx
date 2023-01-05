@@ -11,6 +11,7 @@ import APIEndpoints from "../config/APIEndpoints";
 import TopicSelectModal from "./TopicSelectModal";
 import twColors from "../config/twColors";
 import useAuth from "../lib/auth/useAuth";
+import InfoPill from "./Pills/InfoPill";
 
 export default function SubjectInfo({
   data,
@@ -66,48 +67,51 @@ export default function SubjectInfo({
           </Button>
         )}
         <SectionHeader>TOPICS</SectionHeader>
+        {auth.isStaff() && <div className="w-fit">
+          <InfoPill message="Topics can be dragged and dropped on other subjects for re-assigning" />
+        </div>}
         <TopicsGrid topics={data.topics} />
 
         {/* Things only for staff */}
         {auth.isStaff() && <>
-        
-        <Button
-          className={twColors.addContainer}
-          onClick={() => {
-            setShowTopicSelector(true);
-          }}
-        >
-          Add Topic
-        </Button>
 
-       <SectionHeader>ACTIONS</SectionHeader>
-        <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <Button
-            backgroundColor={colors.errorBg}
-            className={twColors.deleteContainer}
-            onClick={() => {
-              console.log("calling delete with id: " + data.id);
-              var confirmDelete = window.confirm(
-                "Are you sure you want to delete this subject?"
-              );
-              if (confirmDelete) {
-                onDeleteSubject(data.id, data.parentId);
-              }
-            }}
-          >
-            Delete This Subject
-          </Button>
           <Button
             className={twColors.addContainer}
             onClick={() => {
-              const subjectName = window.prompt("Enter new subject's name:");
-              if (subjectName === null) return;
-              onCreateChild(subjectName, data.id);
+              setShowTopicSelector(true);
             }}
           >
-            Create Child Subject
+            Add Topic
           </Button>
-        </div></>}
+
+          <SectionHeader>ACTIONS</SectionHeader>
+          <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+            <Button
+              backgroundColor={colors.errorBg}
+              className={twColors.deleteContainer}
+              onClick={() => {
+                console.log("calling delete with id: " + data.id);
+                var confirmDelete = window.confirm(
+                  "Are you sure you want to delete this subject?"
+                );
+                if (confirmDelete) {
+                  onDeleteSubject(data.id, data.parentId);
+                }
+              }}
+            >
+              Delete This Subject
+            </Button>
+            <Button
+              className={twColors.addContainer}
+              onClick={() => {
+                const subjectName = window.prompt("Enter new subject's name:");
+                if (subjectName === null) return;
+                onCreateChild(subjectName, data.id);
+              }}
+            >
+              Create Child Subject
+            </Button>
+          </div></>}
         <JSONViewer heading={'RAW DATA'}>{data}</JSONViewer>
       </ListContainer>
     </div>
@@ -115,6 +119,7 @@ export default function SubjectInfo({
 }
 
 function TopicsGrid({ topics }) {
+  const auth = useAuth();
   return (
     <div
       style={{
@@ -129,7 +134,7 @@ function TopicsGrid({ topics }) {
         return (
           <SanEDDButton
             key={item.id}
-            topicToSubjectDraggable={true}
+            topicToSubjectDraggable={auth.isStaff()}
             topic_id={item.id}
             to={APIEndpoints.TOPICS + item.id}
             style={{ width: 200 }}

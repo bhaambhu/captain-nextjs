@@ -47,12 +47,12 @@ export default function ListItemPath({
         onClick={onClick} className={`flex flex-col p-1 justify-between`}
       >
         <div className="flex items-center mb-1">
-          {/* {draggable && ( */}
+          {draggable && (
             <RiDragMoveFill
               size="15"
               className="cursor-move mr-1"
             />
-          {/* )} */}
+          )}
           <div className="text-xs font-overline">
             {overline}
           </div>

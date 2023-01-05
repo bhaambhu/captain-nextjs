@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SectionHeader from "../Texts/SectionHeader";
 import ListItemTheorySection from "../ListItems/ListItemTheorySection";
 import twColors from "../../config/twColors";
+import InfoPill from "../Pills/InfoPill";
 
 const example = {
   title: "The big O notation",
@@ -89,7 +90,8 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
                 }}
               />
 
-              <SectionHeader>SECTIONS (Drag to Change Order)</SectionHeader>
+              <SectionHeader className="flex items-center gap-3">SECTIONS {theoryStepData.sections.length > 1 && <InfoPill message="Drag sections to change order" />}
+              </SectionHeader>
               {theoryStepData.sections?.map((section, i) => {
                 return (
                   <Draggable key={i} draggableId={"draggable-" + i} index={i}>
@@ -153,7 +155,7 @@ export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
                   theoryStepData.sections = newSections;
                   onTheoryStepDataChange(theoryStepData);
                 }}
-                className={twColors.addContainer+' w-fit '}
+                className={twColors.addContainer + ' w-fit '}
                 overline="Add"
                 title="Theory Section"
               />

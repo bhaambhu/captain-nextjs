@@ -12,7 +12,7 @@ export default function SanEDDButton({
   title,
   className = '',
   placeholder = "Enter Step Title",
-  draggable = false,
+  dragIcon = false,
   topicToSubjectDraggable = false,
   topic_id = -1,
   selected = false,
@@ -49,7 +49,7 @@ export default function SanEDDButton({
 
           {/* Drag Handle and Subtitle */}
           <div className="flex p-1 items-center">
-            {draggable && (
+            {(dragIcon || topicToSubjectDraggable) && (
               <RiDragMoveFill
                 className="cursor-move mr-1"
               />

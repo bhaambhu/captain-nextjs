@@ -10,6 +10,7 @@ import CheckboxPill from "../CheckboxPill";
 export default function ListItemMCQOption({
   mcqOptionData,
   onMCQOptionDataChange,
+  displayLabel="",
   className = '',
   sid,
   draggable = false,
@@ -34,7 +35,7 @@ export default function ListItemMCQOption({
               className="mr-1"
             />
           )}
-          {"Drag to change order"}
+          {displayLabel}
         </div>
 
         {/* Delete */}

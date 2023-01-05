@@ -13,6 +13,7 @@ import twColors from "../../config/twColors";
 import LoadingIndicatorForComponent from "../Loading/LoadingIndicatorForComponent";
 import LoadingIndicatorFullScreen from "../Loading/LoadingIndicatorFullScreen";
 import useAPI from "../../lib/useAPI";
+import InfoPill from "../Pills/InfoPill";
 
 const topic_example = {
   breadcrumbs: [
@@ -306,6 +307,7 @@ export default function TopicEditor({
                     selected={selectedStep.stepType === stepType.AssessQ}
                   />
                   <SectionHeader>STEPS IN TOPIC</SectionHeader>
+                  {topicData.steps.length > 1 && <InfoPill message="Drag to re-order" />}
                   {topicData.steps?.map((step, i) => {
                     return (
                       <Draggable
@@ -360,7 +362,7 @@ export default function TopicEditor({
                                   });
                                 }
                               }}
-                              draggable
+                              dragIcon
                               onClick={() => {
                                 console.log("setting selected step via onclick to ", step.type)
                                 setSelectedStep({

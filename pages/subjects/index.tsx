@@ -24,6 +24,7 @@ import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicato
 import useAPI from '../../lib/useAPI';
 import { confirmation } from '../../config/utils';
 import useAuth from '../../lib/auth/useAuth';
+import InfoPill from '../../components/Pills/InfoPill';
 
 export default function Subjects(props) {
   const [treeData, setTreeData] = useState(null);

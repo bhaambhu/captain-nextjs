@@ -32,6 +32,8 @@ export default Object.freeze({
   unsaved: ' bg-san-unsaved dark:bg-san-dark-unsaved text-san-on-unsaved dark:text-san-dark-on-unsaved border-san-unsaved-container ',
   unsavedContainer: ' bg-san-unsaved-container dark:bg-san-dark-unsaved-container text-san-on-unsaved-container dark:text-san-dark-on-unsaved-container border-current ',
 
+  infoContainer: ' bg-san-info-container dark:bg-san-dark-info-container text-san-on-info-container dark:text-san-dark-on-info-container border-current ',
+
   error: ' bg-san-error dark:bg-san-dark-error text-san-on-error dark:text-san-dark-on-error border-san-error-container ',
   errorContainer: ' bg-san-error-container dark:bg-san-dark-error-container text-san-on-error-container dark:text-san-dark-on-error-container border-current ',
 

@@ -8,6 +8,7 @@ import ListItemTheorySection from "../ListItems/ListItemTheorySection";
 import ListItemMCQOption from "../ListItems/ListItemMCQOption";
 import MyTextEditor from "../TextEditors/MyTextEditor";
 import twColors from "../../config/twColors";
+import InfoPill from "../Pills/InfoPill";
 
 const example = {
   sid: 1,
@@ -109,7 +110,7 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                 }}
                 editable
               />
-              <SectionHeader>OPTIONS</SectionHeader>
+              <SectionHeader className="flex items-center gap-3">OPTIONS {mcqStepData.options.length > 1 && <InfoPill message="Drag sections to change order" />}</SectionHeader>
               {mcqStepData.options?.map((option, i) => {
                 return (
                   <Draggable key={i} draggableId={"draggable-" + i} index={i}>
@@ -130,6 +131,7 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                               : "none",
                           }}
                           className="w-full"
+                          displayLabel={"Option ("+String.fromCharCode('A'.charCodeAt(0) + i)+")"}
                           mcqOptionData={option}
                           sid={mcqStepData.sid}
                           onMCQOptionDataChange={(option) => {

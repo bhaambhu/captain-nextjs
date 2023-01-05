@@ -132,6 +132,10 @@ module.exports = {
             DEFAULT: "#0f6e0f",
             container: "#9cf88a",
           },
+          info: {
+            DEFAULT: "#626200",
+            container: '#eaea00',
+          },
           outline: "#79747E",
           on: {
             primary: {
@@ -176,6 +180,10 @@ module.exports = {
             positive: {
               DEFAULT: "#ffffff",
               container: "#002201",
+            },
+            info: {
+              DEFAULT: "#ffffff",
+              container: '#1d1d00',
             },
           },
           dark: {
@@ -223,6 +231,10 @@ module.exports = {
               DEFAULT: "#81db71",
               container: "#005304",
             },
+            info: {
+              DEFAULT: "#cdcd00",
+              container: '#494900',
+            },
             outline: "#948f99",
             on: {
               primary: {
@@ -267,6 +279,10 @@ module.exports = {
               positive: {
                 DEFAULT: "#003a02",
                 container: "#9cf88a",
+              },
+              info: {
+                DEFAULT: "#323200",
+                container: '#eaea00',
               },
             }
           }

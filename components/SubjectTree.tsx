@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge';
 import subjectsAPIService from "../lib/APIServices/subjectsAPIService";
 import topicsAPIService from '../lib/APIServices/topicsAPIService';
+import InfoPill from "./Pills/InfoPill";
 import SanSpinner from "./SanSpinner";
 
 const subjectDataFormat = Object.freeze({
@@ -169,16 +170,21 @@ function SubjectTree({ treeData, setTreeData, selectedSubjectId, setSelectedSubj
   };
 
   return (
-    <Tree
-      tree={treeData}
-      renderItem={renderItem}
-      onExpand={onExpand}
-      onCollapse={onCollapse}
-      offsetPerLevel={PADDING_PER_LEVEL}
-      onDragEnd={onDropSubjectOnSubject}
-      isDragEnabled={onDropSubjectOnSubject}
-      isNestingEnabled={isNestingEnabled}
-    />
+    <div>
+      {onDropSubjectOnSubject && <div className='w-fit mb-3'>
+        <InfoPill message="Drag subjects to change order or group together" />
+      </div>}
+      <Tree
+        tree={treeData}
+        renderItem={renderItem}
+        onExpand={onExpand}
+        onCollapse={onCollapse}
+        offsetPerLevel={PADDING_PER_LEVEL}
+        onDragEnd={onDropSubjectOnSubject}
+        isDragEnabled={onDropSubjectOnSubject}
+        isNestingEnabled={isNestingEnabled}
+      />
+    </div>
   )
 }
 
