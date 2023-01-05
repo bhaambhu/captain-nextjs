@@ -8,8 +8,8 @@ import APIEndpoints from "../config/APIEndpoints";
 const simulateDelays = false;
 const maxDelay = 1000;
 
-const baseURL = 'http://127.0.0.1:8000/api/'
-// const baseURL = "https://captain-django-production.up.railway.app/api/";
+// const baseURL = 'http://127.0.0.1:8000/api/'
+const baseURL = "https://captain-django-production.up.railway.app/api/";
 
 const apiSauceClient = create({
   baseURL: baseURL,

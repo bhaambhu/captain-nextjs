@@ -8,7 +8,9 @@ import { useRouter } from 'next/router';
 import { pathDBHelper } from '../../lib/DBHelpers/pathDBHelper';
 import APIEndpoints from '../../config/APIEndpoints';
 import pathsAPIService from '../../lib/APIServices/pathsAPIService';
-import useApi from '../../lib/useAPI';
+import useAPI from '../../lib/useAPI';
+import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
+import useAuth from '../../lib/auth/useAuth';
 
 // export const getStaticProps: GetStaticProps = async () => {
 //   const paths = await pathDBHelper.getAll();
@@ -20,10 +22,10 @@ import useApi from '../../lib/useAPI';
 
 export default function Paths() {
 
-  const pathsApiHook = useApi(pathsAPIService.getPaths);
+  const getPathsAPI = useAPI(pathsAPIService.getPaths);
 
   const loadPaths = async () => {
-    await pathsApiHook.request();
+    await getPathsAPI.request();
   };
 
   useEffect(() => {
@@ -32,32 +34,40 @@ export default function Paths() {
 
   const router = useRouter();
 
-  if (pathsApiHook.data) {
+  if (getPathsAPI.loading) {
+    return <LoadingIndicatorFullScreen visible={true} />
+  }
+
+  if (getPathsAPI.data) {
     return (
       <PathsGrid
-        paths={pathsApiHook.data}
-        onCreatedPath={() => {
-          // Add code to refresh page, so newly created path is displayed in the grid
-          router.reload();
+        paths={getPathsAPI.data}
+        onCreatedPath={(newPathData) => {
+          getPathsAPI.setData(getPathsAPI.data, getPathsAPI.data.push(newPathData))
         }}
       />
     )
-  } else
-    return (
-      <div>
-        <Modal />
-      </div>
-    );
+  }
 
 }
 
 function PathsGrid({ paths, onCreatedPath }) {
 
-  function createPath() {
-    pathsAPIService.createPath().then(response => {
-      alert(response.ok);
-      onCreatedPath()
-    });
+  const createPathAPI = useAPI(pathsAPIService.createPath)
+
+  async function createPath(title, about) {
+    const response = await createPathAPI.request(title, about);
+
+    if(response.ok){
+      console.log('current paths data ', paths);
+      console.log('recieved data ', response.data);
+
+      onCreatedPath(response.data);
+    }
+  }
+
+  if (createPathAPI.loading) {
+    return <LoadingIndicatorFullScreen visible={true} />
   }
 
   return (
@@ -73,13 +83,18 @@ function PathsGrid({ paths, onCreatedPath }) {
           />
         );
       })}
-      <SanEDDButton
-        onClick={() => {
-          createPath();
-        }}
-        style={{ width: 200 }}
-        title={"Add New Path"}
-      />
+      {useAuth().isStaff() &&
+        <SanEDDButton
+          onClick={() => {
+            const title = window.prompt("Enter new path's name:");
+            if (title === null) return;
+            const about = window.prompt("Enter new path's description:");
+            createPath(title, about);
+          }}
+          style={{ width: 200 }}
+          title={"Add New Path"}
+        />
+      }
     </div>
   );
 }

@@ -66,7 +66,10 @@ export default function SanEDDButton({
           {onDelete && (
             <div className="text-xl leading-none flex cursor-pointer" title={onDeleteHover}>
               <TiDelete
-                onClick={onDelete}
+                onClick={(e) => { 
+                  e.stopPropagation();
+                  onDelete();
+                }}
                 className={selected ? twColors.cross : twColors.crossContainer}
               />
               {/* &ndash; */}

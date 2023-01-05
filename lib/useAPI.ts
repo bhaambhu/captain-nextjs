@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import useAuth from "../../auth/useAuth";
 
-const useApi = (apiFunc) => {
+const useAPI = (apiFunc) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,4 +43,4 @@ const useApi = (apiFunc) => {
   };
 };
 
-export default useApi;
+export default useAPI;

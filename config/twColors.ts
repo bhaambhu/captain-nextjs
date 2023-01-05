@@ -17,6 +17,8 @@ export default Object.freeze({
   surface2: ' bg-san-primary/10 dark:bg-san-dark-primary/10 dark:text-san-dark-on-surface shadow-xl border-current ',
   // This is applied to the big editor area
   surface3: ' bg-san-primary/20 dark:bg-san-dark-primary/20 dark:text-san-dark-on-surface shadow-2xl border-current ',
+  
+  surfaceSimple: ' bg-san-surface text-san-on-surface dark:bg-san-dark-surface dark:text-san-dark-on-surface shadow-lg border-current ',
 
   add: ' bg-san-additem dark:bg-san-dark-additem text-san-on-additem dark:text-san-dark-on-additem border-current ',
   addContainer: ' bg-san-additem-container dark:bg-san-dark-additem-container text-san-on-additem-container dark:text-san-dark-on-additem-container border-current ',
@@ -43,4 +45,7 @@ export default Object.freeze({
 
   // For modals and windows
   window: ' bg-san-primary-container text-san-on-primary-container border-current ',
+
+  // For highlighted text
+  textHL: ' text-san-primary dark:text-san-dark-primary ',
 })

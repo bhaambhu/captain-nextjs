@@ -10,6 +10,9 @@ import TopicInfoStep from "./TopicInfoStep";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
 import Modal from "../../components/Modal";
 import twColors from "../../config/twColors";
+import LoadingIndicatorForComponent from "../Loading/LoadingIndicatorForComponent";
+import LoadingIndicatorFullScreen from "../Loading/LoadingIndicatorFullScreen";
+import useAPI from "../../lib/useAPI";
 
 const topic_example = {
   breadcrumbs: [
@@ -154,16 +157,19 @@ export default function TopicEditor({
   onTopicDeletedOnline,
 }) {
   const [topicData, setTopicData] = useState("Loading...");
-  const [topicLoaded, setTopicLoaded] = useState(false);
   const [selectedStep, setSelectedStep] = useState({
     stepType: stepType.Info,
     sid: null,
   });
 
-
+  const useGetTopicAPI = useAPI(topicsAPIService.getTopic)
+  const useUpdateTopicAPI = useAPI(topicsAPIService.updateTopic)
+  const useDeleteTopicAPI = useAPI(topicsAPIService.deleteTopic)
+  
   const deleteTopic = async () => {
     // Logic to delete topic on server
-    const result = await topicsAPIService.deleteTopic(topicData.id);
+    const result = await useDeleteTopicAPI.request(topicData.id);
+    // const result = await topicsAPIService.deleteTopic(topicData.id);
     if (!result.ok) return "Error: " + result.problem;
 
     setUnsavedChanges(false);
@@ -174,7 +180,8 @@ export default function TopicEditor({
   const saveTopic = async (newTopicData) => {
     console.log("saving topic data...");
     // await new Promise((r) => setTimeout(r, 2000));
-    const result = await topicsAPIService.updateTopic(newTopicData);
+    const result = await useUpdateTopicAPI.request(newTopicData);
+    // const result = await topicsAPIService.updateTopic(newTopicData);
     if (!result.ok) return "Error: " + result.problem;
     console.log("Saved Topic Online");
     console.log(result.data);
@@ -186,17 +193,17 @@ export default function TopicEditor({
   const loadTopic = async (id) => {
     console.log("fetching topic data...");
     // await new Promise((r) => setTimeout(r, 2000));
-    const result = await topicsAPIService.getTopic(id);
+    const result = await useGetTopicAPI.request(id)
     if (!result.ok) return "Error: " + result.problem;
     console.log(result.data);
     setTopicData(result.data);
-    setTopicLoaded(true);
+    // setTopicLoaded(true);
     setUnsavedChanges(false);
     return result.data;
   };
 
   useEffect(() => {
-    setTopicLoaded(false);
+    // setTopicLoaded(false);
     loadTopic(topic_id);
     setSelectedStep({
       ...selectedStep,
@@ -240,12 +247,15 @@ export default function TopicEditor({
     setTopicData({ ...topicData, steps: currentTopicSteps });
   };
 
-  if (!topicLoaded) return <Modal />;
+  // if (!topicLoaded) return <Modal />;
+
+  if (!useGetTopicAPI.loadedOnce || !topicData) return <LoadingIndicatorFullScreen visible={true} />
 
   return (
     <div
       className="flex w-full gap-2.5"
     >
+      <LoadingIndicatorFullScreen visible={useGetTopicAPI.loading || useUpdateTopicAPI.loading || useDeleteTopicAPI.loading} />
       {/* Left side section */}
       <div
         className="max-w-[200px]"
@@ -323,8 +333,7 @@ export default function TopicEditor({
                               className="w-full"
                               overline={stepTypeString(step.type)}
                               title={step.title}
-                              onDelete={(e) => {
-                                e.stopPropagation();
+                              onDelete={() => {
                                 var confirmDelete = window.confirm(
                                   "Are you sure you want to delete this whole step?"
                                 );

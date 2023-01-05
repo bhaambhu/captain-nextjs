@@ -10,6 +10,7 @@ import dimensions from "../config/dimensions";
 import APIEndpoints from "../config/APIEndpoints";
 import TopicSelectModal from "./TopicSelectModal";
 import twColors from "../config/twColors";
+import useAuth from "../lib/auth/useAuth";
 
 export default function SubjectInfo({
   data,
@@ -20,6 +21,7 @@ export default function SubjectInfo({
   onCreateChild,
 }) {
   const [showTopicSelector, setShowTopicSelector] = useState(false);
+  const auth = useAuth();
   return (
     <div className="max-w-[40%]">
       {showTopicSelector && (
@@ -43,28 +45,32 @@ export default function SubjectInfo({
           placeholder="Enter Subject Title"
           className={twColors.inputField}
           title={data.name}
-          onChange={(newValue) => {
+          onChange={auth.isStaff() ? ((newValue) => {
             data.name = newValue;
             onDataChange(data);
-          }}
+          }) : null}
         />
         <SanEDDButton
           overline="ABOUT"
           placeholder="Enter a short description about this subject."
           className={twColors.inputField}
           title={data.about}
-          onChange={(newValue) => {
+          onChange={auth.isStaff() ? ((newValue) => {
             data.about = newValue;
             onDataChange(data);
-          }}
+          }) : null}
         />
         {onDataSave && (
-          <TextButton style={{ color: colors.secondary }} onClick={onDataSave}>
+          <Button className={twColors.unsavedContainer} onClick={onDataSave}>
             Save
-          </TextButton>
+          </Button>
         )}
         <SectionHeader>TOPICS</SectionHeader>
         <TopicsGrid topics={data.topics} />
+
+        {/* Things only for staff */}
+        {auth.isStaff() && <>
+        
         <Button
           className={twColors.addContainer}
           onClick={() => {
@@ -74,18 +80,8 @@ export default function SubjectInfo({
           Add Topic
         </Button>
 
-        <SectionHeader>ACTIONS</SectionHeader>
+       <SectionHeader>ACTIONS</SectionHeader>
         <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <Button
-          className={twColors.addContainer}
-          onClick={() => {
-              const subjectName = window.prompt("Enter new subject's name:");
-              if (subjectName === null) return;
-              onCreateChild(subjectName, data.id);
-            }}
-          >
-            Add Child Subject
-          </Button>
           <Button
             backgroundColor={colors.errorBg}
             className={twColors.deleteContainer}
@@ -101,8 +97,18 @@ export default function SubjectInfo({
           >
             Delete This Subject
           </Button>
-        </div>
-        <JSONViewer heading={'JSON View'}>{data}</JSONViewer>
+          <Button
+            className={twColors.addContainer}
+            onClick={() => {
+              const subjectName = window.prompt("Enter new subject's name:");
+              if (subjectName === null) return;
+              onCreateChild(subjectName, data.id);
+            }}
+          >
+            Create Child Subject
+          </Button>
+        </div></>}
+        <JSONViewer heading={'RAW DATA'}>{data}</JSONViewer>
       </ListContainer>
     </div>
   );

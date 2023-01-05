@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../../components/Buttons/Button';
 import JSONViewer from '../../components/JSONViewer';
-import LoadingIndicator from '../../components/LoadingIndicator';
+import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import twColors from '../../config/twColors';
 import { viewableDateTime } from '../../config/utils';
 import usersAPIService from '../../lib/APIServices/usersAPIService';
-import useApi from '../../lib/useAPI';
+import useAPI from '../../lib/useAPI';
 
 export default function Users() {
   const [users, setUsers] = useState()
 
-  const updateStaffRoleAPI = useApi(usersAPIService.updateUserStaffRole)
+  const updateStaffRoleAPI = useAPI(usersAPIService.updateUserStaffRole)
 
   const loadUsersData = async () => {
     console.log("fetching data stats...");
@@ -46,7 +46,7 @@ export default function Users() {
   }, []);
 
   if (!users || updateStaffRoleAPI.loading) {
-    return <LoadingIndicator visible={true} />
+    return <LoadingIndicatorFullScreen visible={true} />
   }
   return (
     <div className="p-3 gap-3 flex flex-wrap justify-center grow">

@@ -25,7 +25,7 @@ function Navbar() {
           <NavBarLink to={routes.TOPICS}>Topics</NavBarLink>
           {auth.isSuperUser() && <NavBarLink to={routes.USERS}>Users</NavBarLink>}
           {auth.isStaff() && <NavBarLink to={routes.DATA}>Data</NavBarLink>}
-          <NavBarLink to={routes.EXAMS}>Exams</NavBarLink>
+          {/* <NavBarLink to={routes.EXAMS}>Exams</NavBarLink> */}
         </div>
         <div
           className='flex w-full justify-end gap-2.5 items-center'

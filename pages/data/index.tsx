@@ -4,9 +4,9 @@ import dimensions from "../../config/dimensions";
 import SectionHeader from "../../components/Texts/SectionHeader";
 import colors from "../../config/colors";
 import dataInfoAPIService from "../../lib/APIServices/dataInfoAPIService";
-import LoadingIndicator from "../../components/LoadingIndicator";
+import LoadingIndicatorFullScreen from "../../components/Loading/LoadingIndicatorFullScreen";
 
-let dataGroups = {
+let dataGroupsStructure = {
   knowledge: [],
   users: [],
   auth: [],
@@ -20,6 +20,7 @@ function DataInfoViewer() {
 
   const loadDataInfo = async () => {
     console.log("fetching data stats...");
+    const dataGroups = JSON.parse(JSON.stringify(dataGroupsStructure));
     // await new Promise((r) => setTimeout(r, 2000));
     const result = await dataInfoAPIService.getDataInfo();
     if (!result.ok) return "Error: " + result.problem;
@@ -49,7 +50,7 @@ function DataInfoViewer() {
   }, []);
 
   if (!dataInfo) {
-    return <LoadingIndicator visible={true} />
+    return <LoadingIndicatorFullScreen visible={true} />
   }
   return (
     <div className="p-3 gap-3 flex flex-wrap">

@@ -8,8 +8,8 @@ import routes from '../config/routes';
 import twColors from '../config/twColors';
 import usersAPIService from '../lib/APIServices/usersAPIService';
 import useAuth from '../lib/auth/useAuth';
-import useApi from '../lib/useAPI';
-import LoadingIndicator from '../components/LoadingIndicator';
+import useAPI from '../lib/useAPI';
+import LoadingIndicatorFullScreen from '../components/Loading/LoadingIndicatorFullScreen';
 import Form from '../components/Form/Form';
 import ErrorPill from '../components/Pills/ErrorPill';
 import FormField from '../components/Form/FormField';
@@ -20,8 +20,8 @@ export default function Profile() {
 
   const [error, setError] = useState("");
 
-  const updateAPI = useApi(usersAPIService.updateUserInfo)
-  const deleteAPI = useApi(usersAPIService.deleteUser)
+  const updateAPI = useAPI(usersAPIService.updateUserInfo)
+  const deleteAPI = useAPI(usersAPIService.deleteUser)
 
   const handleSubmit = async (data) => {
 
@@ -67,7 +67,7 @@ export default function Profile() {
     <div className='flex items-center justify-center'>
       <div className={twMerge(twColors.surface1 + ' w-fit m-3 border p-3 ')}>
         <SectionHeader className='mb-3 mt-0'>UPDATE DETAILS</SectionHeader>
-        <LoadingIndicator visible={updateAPI.loading || deleteAPI.loading} />
+        <LoadingIndicatorFullScreen visible={updateAPI.loading || deleteAPI.loading} />
         {console.log(auth.user)}
         <table className='table-fixed'>
           <tbody>

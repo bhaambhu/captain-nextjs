@@ -9,15 +9,15 @@ import usersAPIService from "../lib/APIServices/usersAPIService";
 import dimensions from "../config/dimensions";
 import colors from "../config/colors";
 import ErrorPill from "../components/Pills/ErrorPill";
-import useApi from "../lib/useAPI";
+import useAPI from "../lib/useAPI";
 import { Button } from "../components/Buttons/Button";
-import LoadingIndicator from "../components/LoadingIndicator";
+import LoadingIndicatorFullScreen from "../components/Loading/LoadingIndicatorFullScreen";
 
 export default function Register() {
   const auth = useAuth();
 
-  const registerAPI = useApi(usersAPIService.register)
-  const loginAPI = useApi(usersAPIService.logIn);
+  const registerAPI = useAPI(usersAPIService.register)
+  const loginAPI = useAPI(usersAPIService.logIn);
 
   const [error, setError] = useState("");
 
@@ -56,7 +56,7 @@ export default function Register() {
   return (
     <div className="flex grow justify-center items-center"
     >
-      <LoadingIndicator visible={registerAPI.loading || loginAPI.loading} />
+      <LoadingIndicatorFullScreen visible={registerAPI.loading || loginAPI.loading} />
       <Form
         initialValues={{
           email: "",

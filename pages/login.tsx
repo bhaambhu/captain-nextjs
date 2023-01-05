@@ -9,13 +9,13 @@ import usersAPIService from "../lib/APIServices/usersAPIService";
 import dimensions from "../config/dimensions";
 import colors from "../config/colors";
 import ErrorPill from "../components/Pills/ErrorPill";
-import useApi from "../lib/useAPI";
-import LoadingIndicator from "../components/LoadingIndicator";
+import useAPI from "../lib/useAPI";
+import LoadingIndicatorFullScreen from "../components/Loading/LoadingIndicatorFullScreen";
 
 export default function Login() {
   const auth = useAuth();
 
-  const loginAPI = useApi(usersAPIService.logIn);
+  const loginAPI = useAPI(usersAPIService.logIn);
 
   const handleSubmit = async ({ email, password }) => {
     const result = await loginAPI.request(email, password);
@@ -32,7 +32,7 @@ export default function Login() {
   return (
     <div className="flex grow justify-center items-center"
     >
-      <LoadingIndicator visible={loginAPI.loading} />
+      <LoadingIndicatorFullScreen visible={loginAPI.loading} />
       <Form
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}

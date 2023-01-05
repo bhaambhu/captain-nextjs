@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
-export default function LoadingIndicator({ visible = false }) {
+export default function LoadingIndicatorFullScreen({ visible = false }) {
   const [isBrowser, setIsBrowser] = useState(false);
   useEffect(() => {
     setIsBrowser(true);

@@ -19,6 +19,11 @@ function viewableDateTime(input) {
   return new Date(input).toLocaleString([], {day:"numeric", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", hour12: true});
 }
 
+function confirmation(message){
+  let confirmation = window.confirm(message);
+  return confirmation;
+}
+
 // It modifies the API received subjects data so that it can be used by atlaskit/tree library, by
 // 1) Converting children from JSONArray to simple array of IDS
 // 2) Add fields hasChildren:?, isExpanded:false, isChildrenLoading:false
@@ -42,4 +47,4 @@ function makeSubjectAPIDataReadyForAtlaskit(apiReceivedSubjectData) {
 //   `
 // }
 
-export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime };
+export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime, confirmation };

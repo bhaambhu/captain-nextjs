@@ -20,6 +20,10 @@ import SectionHeader from '../../components/Texts/SectionHeader';
 import { twMerge } from 'tailwind-merge';
 import twColors from '../../config/twColors';
 import { SubjectTree, subjectDataFormat, loadSubjects } from '../../components/SubjectTree';
+import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
+import useAPI from '../../lib/useAPI';
+import { confirmation } from '../../config/utils';
+import useAuth from '../../lib/auth/useAuth';
 
 export default function Subjects(props) {
   const [treeData, setTreeData] = useState(null);
@@ -28,8 +32,14 @@ export default function Subjects(props) {
   const [networkLoading, setNetworkLoading] = useState(true);
 
   const [selectedSubject, setSelectedSubject] = useState();
-  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null);
   const [pendingChanges, setPendingChanges] = useState(false);
+
+  const useGetSubjectDetailAPI = useAPI(subjectsAPIService.getSubjectDetail);
+  const useSaveSubjectDetailAPI = useAPI(subjectsAPIService.saveSubjectDetail);
+  const useCreateSubjectAPI = useAPI(subjectsAPIService.createSubject);
+
+  const auth = useAuth();
 
   const onDeleteSubject = async (id, parentId) => {
     setNetworkLoading(true);
@@ -120,9 +130,8 @@ export default function Subjects(props) {
   };
 
   const onCreateSubject = async (name, parentId) => {
-    setNetworkLoading(true);
     // await new Promise((r) => setTimeout(r, 100));
-    const result = await subjectsAPIService.createSubject(name, parentId);
+    const result = await useCreateSubjectAPI.request(name, parentId);
     if (!result.ok) return alert("Error: " + result.problem);
     console.log("received new subject data:", result)
     const newSubject = result.data;
@@ -139,14 +148,13 @@ export default function Subjects(props) {
     treeData.items[parentId].isExpanded = true;
     setTreeData({ ...treeData, ...treeData });
     console.log(treeData);
-    setNetworkLoading(false);
     console.log("done");
   };
 
   const saveSubjectDetail = async () => {
     console.log("saving subject detail...");
     // await new Promise((r) => setTimeout(r, 2000));
-    const result = await subjectsAPIService.saveSubjectDetail(selectedSubject);
+    const result = await useSaveSubjectDetailAPI.request(selectedSubject);
     if (!result.ok) return "Error: " + result.problem;
     console.log("Saved Subject Detail Online");
     console.log(result.data);
@@ -159,19 +167,21 @@ export default function Subjects(props) {
   const loadSelectedSubject = async (subject_id) => {
     if (selectedSubject != null && selectedSubject.id == subject_id) return;
     if (pendingChanges) {
-      var confirmRevert = window.confirm(
-        "This subject has unsaved changes. They will be removed if you have not saved them yet. Are you sure you want to proceed?"
-      );
-      if (!confirmRevert) return;
-      else setPendingChanges(false);
+      if (confirmation("This subject has unsaved changes. They will be removed if you have not saved them yet. Are you sure you want to proceed?")) {
+        setPendingChanges(false);
+      } else {
+        // Means we did not want to select other subject
+        setSelectedSubjectId(selectedSubject.id);
+        // Don't load this new subject anymore and exit function
+        return;
+      }
     }
-    setNetworkLoading(true);
+
     console.log("fetching selected subject...");
-    const result = await subjectsAPIService.getSubjectDetail(subject_id);
+    const result = await useGetSubjectDetailAPI.request(subject_id);
     if (!result.ok) return "Error: " + result.problem;
     console.log(result.data);
     setSelectedSubject(result.data);
-    setNetworkLoading(false);
     return result.data;
   };
 
@@ -231,69 +241,69 @@ export default function Subjects(props) {
     loadSubjects(setNetworkLoading, setTreeData);
   }, []);
 
-  if (networkLoading) {
-    return (
-      <div>
-        <Modal />
-      </div>
-    );
-  } else
-    return (
-      <div className='flex p-3 gap-3'>
-        {/* <Prompt
+  // if (networkLoading) {
+  //   return <LoadingIndicatorFullScreen visible={true} />
+  // }
+
+  return (
+    <div className='flex p-3 gap-3'>
+      {/* <Prompt
           when={pendingChanges}
           message="You have unsaved changes that will be forgotten. Are you sure you want to leave?"
         /> */}
-        <div className='w-full flex leading-8 flex-col'>
-          <div className='flex justify-between'>
-            <SectionHeader bar={false} className='mb-3 inline'>SUBJECTS </SectionHeader>
-            <Button
-              className={twColors.addContainer + 'w-fit text-xs uppercase'}
-              onClick={() => {
-                const subjectName = window.prompt("Enter new subject's name:");
-                if (subjectName === null) return;
-                onCreateSubject(subjectName, 1);
-              }}
-            >
-              Create New Subject
-            </Button>
-          </div>
+      <LoadingIndicatorFullScreen visible={networkLoading || useGetSubjectDetailAPI.loading || useSaveSubjectDetailAPI.loading || useCreateSubjectAPI.loading} />
+      <div className='w-full flex leading-8 flex-col'>
+        <div className='flex justify-between'>
+          <SectionHeader bar={false} className='mb-3 inline'>SUBJECTS </SectionHeader>
+          {auth.isStaff() && <Button
+            className={twColors.addContainer + 'w-fit text-xs uppercase'}
+            onClick={() => {
+              const subjectName = window.prompt("Enter new subject's name:");
+              if (subjectName === null) return;
+              onCreateSubject(subjectName, 1);
+            }}
+          >
+            Create New Subject
+          </Button>}
+        </div>
+        {treeData &&
           <SubjectTree
             treeData={treeData}
             setTreeData={setTreeData}
             selectedSubjectId={selectedSubjectId}
             setSelectedSubjectId={setSelectedSubjectId}
-            onDropTopicOnSubject={onDropTopicOnSubject}
-            onDropSubjectOnSubject={onDropSubjectOnSubject}
-            isNestingEnabled={true}
+            onDropTopicOnSubject={auth.isStaff() ? onDropTopicOnSubject : null}
+            onDropSubjectOnSubject={auth.isStaff() ? onDropSubjectOnSubject : null}
+            isNestingEnabled={auth.isStaff()}
           />
-        </div>
-        {selectedSubject && (
-          <SubjectInfo
-            data={selectedSubject}
-            onCreateChild={onCreateSubject}
-            onAddTopic={(topic_id) => {
-              onDropTopicOnSubject(topic_id, selectedSubject.id);
-            }}
-            onDataChange={(newData) => {
-              setSelectedSubject({ ...selectedSubject, ...newData });
-              setPendingChanges(true);
-            }}
-            onDeleteSubject={(id, parentId) => {
-              setPendingChanges(false);
-              onDeleteSubject(id, parentId);
-            }}
-            onDataSave={
-              pendingChanges
-                ? () => {
-                  saveSubjectDetail();
-                }
-                : null
-            }
-          />
-        )}
+        }
       </div>
-    );
+      {selectedSubject && (
+        <SubjectInfo
+          data={selectedSubject}
+          onCreateChild={onCreateSubject}
+          onAddTopic={(topic_id) => {
+            onDropTopicOnSubject(topic_id, selectedSubject.id);
+          }}
+          onDataChange={(newData) => {
+            setSelectedSubject({ ...selectedSubject, ...newData });
+            setPendingChanges(true);
+          }}
+          onDeleteSubject={(id, parentId) => {
+            setPendingChanges(false);
+            onDeleteSubject(id, parentId);
+          }}
+          onDataSave={
+            pendingChanges
+              ? () => {
+                saveSubjectDetail();
+              }
+              : null
+          }
+        />
+      )}
+    </div>
+  );
   return (
     <JSONViewer heading="Subjects">{props}</JSONViewer>
   )

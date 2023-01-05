@@ -4,11 +4,9 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import React, { useEffect, useState } from 'react'
 import JSONViewer from '../../../components/JSONViewer';
 import TopicEditor from '../../../components/Topic/TopicEditor';
-import Modal from '../../../components/Modal';
-import dimensions from '../../../config/dimensions';
 import { stepType } from '../../../config/enums';
 import pathsAPIService from '../../../lib/APIServices/pathsAPIService';
-import useApi from '../../../lib/useAPI';
+import useAPI from '../../../lib/useAPI';
 import PathInfoStep from '../../../components/Path/PathInfoStep';
 import ListContainer from '../../../components/ListItems/ListContainer';
 import SanEDDButton from '../../../components/Buttons/SanEDDButton';
@@ -17,6 +15,9 @@ import colors from '../../../config/colors';
 import TopicSelectModal from '../../../components/TopicSelectModal';
 import { Button } from '../../../components/Buttons/Button';
 import twColors from '../../../config/twColors';
+import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
+import useAuth from '../../../lib/auth/useAuth';
+import routes from '../../../config/routes';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 //   try {
@@ -33,6 +34,7 @@ import twColors from '../../../config/twColors';
 
 export default function Path() {
   const router = useRouter();
+  const auth = useAuth();
   const { id: pathID } = router.query;
   const [showTopicSelector, setShowTopicSelector] = useState(false);
   const [topicUnsavedChanges, setTopicUnsavedChanges] = useState(false);
@@ -42,14 +44,14 @@ export default function Path() {
     id: null,
   });
 
-  const pathDetailsAPI = useApi(pathsAPIService.getPathDetail);
-  const deletePathAPI = useApi(pathsAPIService.deletePath);
-  const savePathAPI = useApi(pathsAPIService.savePathDetail);
+  const pathDetailsAPI = useAPI(pathsAPIService.getPathDetail);
+  const deletePathAPI = useAPI(pathsAPIService.deletePath);
+  const savePathAPI = useAPI(pathsAPIService.savePathDetail);
 
   const deletePath = async () => {
     await deletePathAPI.request(pathID);
     setPathUnsavedChanges(false);
-    router.replace('/paths');
+    router.replace(routes.PATHS);
   }
 
   const savePath = async (newPathDetails) => {
@@ -61,58 +63,95 @@ export default function Path() {
     await pathDetailsAPI.request(id);
   };
 
+  function addTopicToPathData(topicData) {
+    // Find max order currently used, also check if this topic is already in topic_sequence
+    var maxOrder = 0;
+    for (let i = 0; i < pathDetailsAPI.data.topic_sequence.length; i++) {
+      if (
+        pathDetailsAPI.data.topic_sequence[i].topic.id ==
+        topicData.id
+      ) {
+        alert("This topic is already added in this path.");
+        return;
+      }
+      if (pathDetailsAPI.data.topic_sequence[i].order > maxOrder)
+        maxOrder = pathDetailsAPI.data.topic_sequence[i].order;
+    }
+    maxOrder = maxOrder + 1;
+
+    pathDetailsAPI.data.topic_sequence.push({
+      order: maxOrder,
+      topic: topicData,
+    });
+    pathDetailsAPI.setData({
+      ...pathDetailsAPI.data,
+      topic_sequence: pathDetailsAPI.data.topic_sequence,
+    });
+  }
+
+  function removeTopicFromPathData(topicIndexInSequence) {
+    // Remove topic from data
+    let newTopicSequence = pathDetailsAPI.data.topic_sequence;
+    newTopicSequence.splice(topicIndexInSequence, 1);
+
+    // Correct order number in newTopicSequence
+    for (let i = 0; i < newTopicSequence.length; i++) {
+      newTopicSequence[i].order = i + 1;
+    }
+
+    // Update data object
+    pathDetailsAPI.setData({
+      ...pathDetailsAPI.data,
+      topic_sequence: newTopicSequence,
+    });
+  }
+
+  function removeTopicByIDFromPathData(topicID) {
+    // Find topic's index in topic_sequence
+    for (let i = 0; i < pathDetailsAPI.data.topic_sequence.length; i++) {
+      if(pathDetailsAPI.data.topic_sequence[i].topic.id == topicID){
+        return removeTopicFromPathData(i);
+      }
+    }
+  }
+
+  // Correct the 'order' field in topic_sequence array of path to be consecutive
+  function makeTopicSequenceConsecutive() {
+    // Loop through topic_sequence
+    for (let i = 0; i < pathDetailsAPI.data.topic_sequence.length; i++) {
+      pathDetailsAPI.data.topic_sequence[i].order = i + 1;
+    }
+    // Apply updates
+    pathDetailsAPI.setData({
+      ...pathDetailsAPI.data,
+      topic_sequence: pathDetailsAPI.data.topic_sequence,
+    });
+  }
+
   useEffect(() => {
     if (!router.isReady) return;
-    console.log('loading now')
-    loadPath(pathID);
+
+    if (!auth.isStaff()) {
+      router.replace(routes.HOME)
+    } else {
+      console.log('loading now')
+      loadPath(pathID);
+    }
   }, [pathID, router.isReady]);
 
-  if (!pathDetailsAPI.loadedOnce) return <Modal />
-
-  // return(
-  //   <div>
-  //     <JSONViewer heading={'Path Data Edit Mode'}>{pathDetailsAPI.data}</JSONViewer>
-  //   </div>
-  // )
-
+  if (!pathDetailsAPI.loadedOnce) return <LoadingIndicatorFullScreen visible={true} />
   return (
     <div
       className='flex gap-2.5 p-3'
     >
+      <LoadingIndicatorFullScreen visible={pathDetailsAPI.loading || savePathAPI.loading || deletePathAPI.loading} />
       {showTopicSelector && (
         <TopicSelectModal
           heading={"Select Topic"}
-          onSelectTopic={(selectedTopic) => {
+          onSelectTopic={(topicData) => {
             console.log("Selected topic:");
-            console.log(selectedTopic);
-
-            // Find max order currently used, also check if this topic is already in topic_sequence
-            var maxOrder = 0;
-            for (
-              let i = 0;
-              i < pathDetailsAPI.data.topic_sequence.length;
-              i++
-            ) {
-              if (
-                pathDetailsAPI.data.topic_sequence[i].topic.id ==
-                selectedTopic.id
-              ) {
-                alert("This topic is already added in this path.");
-                return;
-              }
-              if (pathDetailsAPI.data.topic_sequence[i].order > maxOrder)
-                maxOrder = pathDetailsAPI.data.topic_sequence[i].order;
-            }
-            maxOrder = maxOrder + 1;
-
-            pathDetailsAPI.data.topic_sequence.push({
-              order: maxOrder,
-              topic: selectedTopic,
-            });
-            pathDetailsAPI.setData({
-              ...pathDetailsAPI.data,
-              topic_sequence: pathDetailsAPI.data.topic_sequence,
-            });
+            console.log(topicData);
+            addTopicToPathData(topicData);
             setShowTopicSelector(false);
             setPathUnsavedChanges(true);
           }}
@@ -198,7 +237,7 @@ export default function Path() {
                               display: "inherit",
                             }}
                           >
-                            {/* List Item for Step (Theory/MCQ) */}
+                            {/* List Item for Topic in Path */}
                             <SanEDDButton
                               {...provided.dragHandleProps}
                               style={{
@@ -230,24 +269,8 @@ export default function Path() {
                                       id: null,
                                     });
                                   }
-                                  // let currentTrack = Object.assign({}, pathDetail);
-                                  let newTopicSequence =
-                                    pathDetailsAPI.data.topic_sequence;
-                                  newTopicSequence.splice(i, 1);
-                                  // currentTrack.topic_sequence = newTopicSequence;
-                                  // Re-assign 'order' attribute of objects in pathDetail.topic_sequence
-                                  for (
-                                    let i = 0;
-                                    i < newTopicSequence.length;
-                                    i++
-                                  ) {
-                                    newTopicSequence[i].order = i + 1;
-                                  }
+                                  removeTopicFromPathData(i);
                                   setPathUnsavedChanges(true);
-                                  pathDetailsAPI.setData({
-                                    ...pathDetailsAPI.data,
-                                    topic_sequence: newTopicSequence,
-                                  });
                                 }
                               }}
                               draggable
@@ -329,7 +352,8 @@ export default function Path() {
         ) : selectedTopic.stepType === stepType.Topic ? (
           <TopicEditor
             onTopicDeletedOnline={() => {
-              alert("lets remove this topic from path list");
+              removeTopicByIDFromPathData(selectedTopic.id);
+              setPathUnsavedChanges(true);
             }}
             topic_id={selectedTopic.id}
             unsavedChanges={topicUnsavedChanges}
