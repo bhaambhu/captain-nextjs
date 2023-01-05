@@ -54,6 +54,7 @@ export default function Paths() {
 function PathsGrid({ paths, onCreatedPath }) {
 
   const createPathAPI = useAPI(pathsAPIService.createPath)
+  const auth = useAuth()
 
   async function createPath(title, about) {
     const response = await createPathAPI.request(title, about);
@@ -83,7 +84,7 @@ function PathsGrid({ paths, onCreatedPath }) {
           />
         );
       })}
-      {useAuth().isStaff() &&
+      {auth.isStaff() &&
         <SanEDDButton
           onClick={() => {
             const title = window.prompt("Enter new path's name:");
