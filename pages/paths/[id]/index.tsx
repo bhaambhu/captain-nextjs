@@ -72,7 +72,7 @@ export default function Path() {
         <H1>{pathDetailsAPI.data.title || "Untitled Path"}</H1>
         {pathDetailsAPI.data.about && <Subtitle>{pathDetailsAPI.data.about}</Subtitle>}
         {/* Action Buttons */}
-        {auth.isStaff() && <div className='flex gap-3 mt-3'>
+        {auth.canAuthor(pathDetailsAPI.data.author) && <div className='flex gap-3 mt-3'>
           <Button className={twColors.addContainer} onClick={() => {
             router.replace(router.asPath + '/edit/')
           }}>Edit</Button>

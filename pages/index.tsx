@@ -20,7 +20,6 @@ export default function Home() {
     }
     pageContent = `# Hello ${auth.user.display_name}!` + pageContent
   }
-
   return (
     // Whole Page
     <div className="p-3">

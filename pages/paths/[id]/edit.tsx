@@ -15,6 +15,7 @@ import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndic
 import useAuth from '../../../lib/auth/useAuth';
 import routes from '../../../config/routes';
 import InfoPill from '../../../components/Pills/InfoPill';
+import TopicPreview from '../../../components/Topic/TopicPreview';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 //   try {
@@ -39,6 +40,7 @@ export default function Path() {
   const [selectedTopic, setSelectedTopic] = useState({
     stepType: stepType.Info,
     id: null,
+    canAuthor: false,
   });
 
   const pathDetailsAPI = useAPI(pathsAPIService.getPathDetail);
@@ -106,7 +108,7 @@ export default function Path() {
   function removeTopicByIDFromPathData(topicID) {
     // Find topic's index in topic_sequence
     for (let i = 0; i < pathDetailsAPI.data.topic_sequence.length; i++) {
-      if(pathDetailsAPI.data.topic_sequence[i].topic.id == topicID){
+      if (pathDetailsAPI.data.topic_sequence[i].topic.id == topicID) {
         return removeTopicFromPathData(i);
       }
     }
@@ -212,6 +214,7 @@ export default function Path() {
                         ...selectedTopic,
                         stepType: stepType.Info,
                         id: null,
+                        canAuthor: false,
                       });
                     }}
                     overline="Edit Path"
@@ -265,6 +268,7 @@ export default function Path() {
                                       ...selectedTopic,
                                       stepType: stepType.Info,
                                       id: null,
+                                      canAuthor: false,
                                     });
                                   }
                                   removeTopicFromPathData(i);
@@ -285,6 +289,7 @@ export default function Path() {
                                   ...selectedTopic,
                                   stepType: stepType.Topic,
                                   id: item.topic.id,
+                                  canAuthor: auth.canAuthor(item.topic.author),
                                 });
                               }}
                               selected={selectedTopic.id === item.topic.id}
@@ -348,36 +353,38 @@ export default function Path() {
             onDeletePath={deletePath}
           />
         ) : selectedTopic.stepType === stepType.Topic ? (
-          <TopicEditor
-            onTopicDeletedOnline={() => {
-              removeTopicByIDFromPathData(selectedTopic.id);
-              setPathUnsavedChanges(true);
-            }}
-            topic_id={selectedTopic.id}
-            unsavedChanges={topicUnsavedChanges}
-            setUnsavedChanges={setTopicUnsavedChanges}
-            onTopicSaved={(updatedTopicData) => {
-              pathDetailsAPI.setData({
-                ...pathDetailsAPI.data,
-                topic_sequence: [...pathDetailsAPI.data.topic_sequence].map(
-                  (object) => {
-                    if (object.topic.id === updatedTopicData.id) {
-                      return {
-                        ...object,
-                        topic: {
-                          ...object.topic,
-                          title: updatedTopicData.title,
-                          about: updatedTopicData.about,
-                          dependencies: updatedTopicData.dependencies,
-                          breadcrumbs: updatedTopicData.breadcrumbs,
-                        },
-                      };
-                    } else return object;
-                  }
-                ),
-              });
-            }}
-          />
+          selectedTopic.canAuthor ?
+            <TopicEditor
+              onTopicDeletedOnline={() => {
+                removeTopicByIDFromPathData(selectedTopic.id);
+                setPathUnsavedChanges(true);
+              }}
+              topic_id={selectedTopic.id}
+              unsavedChanges={topicUnsavedChanges}
+              setUnsavedChanges={setTopicUnsavedChanges}
+              onTopicSaved={(updatedTopicData) => {
+                pathDetailsAPI.setData({
+                  ...pathDetailsAPI.data,
+                  topic_sequence: [...pathDetailsAPI.data.topic_sequence].map(
+                    (object) => {
+                      if (object.topic.id === updatedTopicData.id) {
+                        return {
+                          ...object,
+                          topic: {
+                            ...object.topic,
+                            title: updatedTopicData.title,
+                            about: updatedTopicData.about,
+                            dependencies: updatedTopicData.dependencies,
+                            breadcrumbs: updatedTopicData.breadcrumbs,
+                          },
+                        };
+                      } else return object;
+                    }
+                  ),
+                });
+              }}
+            />
+            : <TopicPreview topicID={selectedTopic.id} />
         ) : null}
       </div>
     </div>

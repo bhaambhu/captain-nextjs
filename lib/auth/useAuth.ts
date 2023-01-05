@@ -35,12 +35,17 @@ const useAuth = () => {
     return user?.is_superuser;
   }
 
+  // If current user is this author, or the superuser, return true
+  const canAuthor = (authorID) => {
+    return user?.is_superuser || (user && user?.user_id == authorID);
+  }
+
   // Helper methods to control page access
   const isActivated = () => {
     return user?.is_active;
   }
   
-  return { logIn, logOut, user, setUser, isAuthenticated, isStaff, isSuperUser, isActivated };
+  return { logIn, logOut, user, setUser, isAuthenticated, isStaff, isSuperUser, isActivated, canAuthor };
 };
 
 export default useAuth;
