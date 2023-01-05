@@ -110,7 +110,7 @@ export default function MCQStep({ mcqStepData, onMCQStepDataChange }) {
                 }}
                 editable
               />
-              <SectionHeader className="flex items-center gap-3">OPTIONS {mcqStepData.options.length > 1 && <InfoPill message="Drag sections to change order" />}</SectionHeader>
+              <SectionHeader className="flex items-center gap-3">OPTIONS {mcqStepData.options?.length > 1 && <InfoPill message="Drag sections to change order" />}</SectionHeader>
               {mcqStepData.options?.map((option, i) => {
                 return (
                   <Draggable key={i} draggableId={"draggable-" + i} index={i}>

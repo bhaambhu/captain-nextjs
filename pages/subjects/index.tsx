@@ -245,7 +245,6 @@ export default function Subjects(props) {
   // if (networkLoading) {
   //   return <LoadingIndicatorFullScreen visible={true} />
   // }
-
   return (
     <div className='flex p-3 gap-3'>
       {/* <Prompt
@@ -253,7 +252,8 @@ export default function Subjects(props) {
           message="You have unsaved changes that will be forgotten. Are you sure you want to leave?"
         /> */}
       <LoadingIndicatorFullScreen visible={networkLoading || useGetSubjectDetailAPI.loading || useSaveSubjectDetailAPI.loading || useCreateSubjectAPI.loading} />
-      <div className='w-full flex leading-8 flex-col'>
+      {/* Left Side Content and Tree */}
+      <div className={twColors.surface1+' border p-3 h-fit rounded-sm w-full flex leading-8 flex-col'}>
         <div className='flex justify-between'>
           <SectionHeader bar={false} className='mb-3 inline'>SUBJECTS </SectionHeader>
           {auth.isStaff() && <Button

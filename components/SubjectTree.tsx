@@ -2,6 +2,7 @@ import Spinner from "@atlaskit/spinner";
 import Tree, { mutateTree, moveItemOnTree } from '@atlaskit/tree'
 import React, { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge';
+import twColors from "../config/twColors";
 import subjectsAPIService from "../lib/APIServices/subjectsAPIService";
 import topicsAPIService from '../lib/APIServices/topicsAPIService';
 import InfoPill from "./Pills/InfoPill";
@@ -129,7 +130,7 @@ function SubjectTree({ treeData, setTreeData, selectedSubjectId, setSelectedSubj
 
   const renderItem = ({ item, onExpand, onCollapse, provided }) => {
     return (
-      <div className='flex p-1'>
+      <div className='flex py-1'>
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
