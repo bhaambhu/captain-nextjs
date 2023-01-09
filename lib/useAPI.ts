@@ -40,6 +40,7 @@ const useAPI = (apiFunc) => {
     problem,
     statusCode,
     loadedOnce,
+    setLoadedOnce
   };
 };
 

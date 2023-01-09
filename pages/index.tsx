@@ -1,7 +1,6 @@
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
-import Body from "../components/Texts/Body";
-import H1 from "../components/Texts/H1"
+import MarkdownPreview from "../components/Markdown/MarkdownPreview";
 import twColors from "../config/twColors";
 import useAuth from "../lib/auth/useAuth"
 
@@ -25,9 +24,7 @@ export default function Home() {
     <div className="p-3">
       {/* Surface */}
       <div className={twColors.surfaceSimple + ' border rounded shadow-2xl p-5 cursor-default prose prose-p:text-justify dark:prose-invert'}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
-      em: ({node, ...props}) => <b className={twColors.textHL} {...props} />,
-    }}>{pageContent}</ReactMarkdown>
+        <MarkdownPreview>{pageContent}</MarkdownPreview>
       </div>
     </div>
   )

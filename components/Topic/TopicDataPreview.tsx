@@ -2,8 +2,10 @@ import React from 'react'
 import twColors from '../../config/twColors'
 import { Button } from '../Buttons/Button'
 import JSONViewer from '../JSONViewer'
+import MobileTopicPreview from '../MobilePreview/MobileTopicPreview'
 import InfoPill from '../Pills/InfoPill'
 import H1 from '../Texts/H1'
+import SectionHeader from '../Texts/SectionHeader'
 import Subtitle from '../Texts/Subtitle'
 
 export default function TopicDataPreview({topicData, onEditButtonPress = null, onDeleteButtonPress = null, infoMessage=''}) {
@@ -21,7 +23,9 @@ export default function TopicDataPreview({topicData, onEditButtonPress = null, o
         <InfoPill message={infoMessage} />
       </div>
       }
-      <JSONViewer heading={'Topic Data'}>{topicData}</JSONViewer>
+      <SectionHeader>PREVIEW</SectionHeader>
+      <MobileTopicPreview topicData={topicData} />
+      {/* <JSONViewer heading={'Topic Data'}>{topicData}</JSONViewer> */}
     </div>
   )
 }

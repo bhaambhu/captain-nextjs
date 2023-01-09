@@ -42,7 +42,7 @@ export default function Topic() {
         <TopicPreview
           topicID={topicId}
           onEditButtonPress={() => {
-            router.replace(router.asPath + '/edit/')
+            router.push(router.asPath + '/edit/')
           }}
           onTopicDeleted={() => { router.back(); }}
         />

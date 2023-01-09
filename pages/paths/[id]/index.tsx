@@ -5,10 +5,13 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '../../../components/Buttons/Button';
 import JSONViewer from '../../../components/JSONViewer';
 import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
+import MobilePathPreview from '../../../components/MobilePreview/MobilePathPreview';
 import Modal from '../../../components/Modal';
+import InfoPill from '../../../components/Pills/InfoPill';
 import H1 from '../../../components/Texts/H1';
 import H2 from '../../../components/Texts/H2';
 import H3 from '../../../components/Texts/H3';
+import SectionHeader from '../../../components/Texts/SectionHeader';
 import Subtitle from '../../../components/Texts/Subtitle';
 import APIEndpoints from '../../../config/APIEndpoints';
 import routes from '../../../config/routes';
@@ -74,11 +77,17 @@ export default function Path() {
         {/* Action Buttons */}
         {auth.canAuthor(pathDetailsAPI.data.author) && <div className='flex gap-3 mt-3'>
           <Button className={twColors.addContainer} onClick={() => {
-            router.replace(router.asPath + '/edit/')
+            router.push(router.asPath + '/edit/')
           }}>Edit</Button>
           <Button className={twColors.deleteContainer} onClick={deletePath}>Delete</Button>
         </div>}
-        <JSONViewer heading={'PREVIEW'} className='mt-3'>{pathDetailsAPI.data}</JSONViewer>
+        <SectionHeader className='flex items-center gap-3 mt-3'>PREVIEW
+          <InfoPill message="Only for illustration, does not mimic the mobile app" />
+        </SectionHeader>
+        <div className='flex'>
+          <MobilePathPreview data={pathDetailsAPI.data} />
+          <JSONViewer className='mt-3'>{pathDetailsAPI.data}</JSONViewer>
+        </div>
       </div>
     </div>
   )

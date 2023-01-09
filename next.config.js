@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const withoutCSSImport = require("next-remove-imports")();
+
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
@@ -11,4 +13,8 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withoutCSSImport({
+  ...nextConfig,
+})
+
+// module.exports = nextConfig

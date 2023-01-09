@@ -7,6 +7,7 @@ import SectionHeader from "../Texts/SectionHeader";
 import ListItemTheorySection from "../ListItems/ListItemTheorySection";
 import twColors from "../../config/twColors";
 import InfoPill from "../Pills/InfoPill";
+import MarkdownEditor from "../Markdown/MarkdownEditor";
 
 const example = {
   title: "The big O notation",
@@ -61,6 +62,31 @@ const example = {
 
 export default function TheoryStep({ theoryStepData, onTheoryStepDataChange }) {
   // const [sections, setsections] = useState(example.sections)
+
+  return (
+    <ListContainer className={twColors.surface3 + ' '}>
+      <SanEDDButton
+        overline="THEORY"
+        placeholder="Enter Theory Title"
+        title={theoryStepData.title}
+        className={twColors.inputField}
+        onChange={(newValue) => {
+          theoryStepData.title = newValue;
+          onTheoryStepDataChange(theoryStepData);
+        }}
+      />
+      <SectionHeader className="flex items-center gap-3">CONTENT</SectionHeader>
+      <MarkdownEditor 
+      value={theoryStepData.data} 
+      onChange={(newValue)=>{
+        theoryStepData.data = newValue;
+        onTheoryStepDataChange(theoryStepData);
+      }} 
+      />
+    </ListContainer>
+  )
+
+  // Old System (Used draggable theory sections)
   return (
     <DragDropContext
       onDragEnd={(param) => {

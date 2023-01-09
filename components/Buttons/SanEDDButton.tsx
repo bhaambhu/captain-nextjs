@@ -94,15 +94,6 @@ export default function SanEDDButton({
           )}
         </div>}
       </div>
-
-      {/* {onDelete && (
-        <div className="cursor-pointer text-cclrs-dark-strong px-1 w-8 border-l border-l-cclrs-dark-strong h-full overflow-clip bg-cclrs-bg-error items-center flex">
-          <CgRemove
-            onClick={onDelete}
-            className="w-full h-full"
-          />
-        </div>
-      )} */}
     </div>
   );
 }

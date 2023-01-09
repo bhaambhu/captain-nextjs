@@ -14,6 +14,7 @@ import LoadingIndicatorForComponent from "../Loading/LoadingIndicatorForComponen
 import LoadingIndicatorFullScreen from "../Loading/LoadingIndicatorFullScreen";
 import useAPI from "../../lib/useAPI";
 import InfoPill from "../Pills/InfoPill";
+import { newTopicStepTheory } from "../../config/dataStructures";
 
 const topic_example = {
   breadcrumbs: [
@@ -254,12 +255,12 @@ export default function TopicEditor({
 
   return (
     <div
-      className="flex w-full gap-2.5"
+      className="flex w-full gap-2.5 "
     >
       <LoadingIndicatorFullScreen visible={useGetTopicAPI.loading || useUpdateTopicAPI.loading || useDeleteTopicAPI.loading} />
       {/* Left side section */}
       <div
-        className="max-w-[200px]"
+        className="w-0 min-w-[17%]"
       >
         <DragDropContext
           onDragEnd={(param) => {
@@ -384,21 +385,8 @@ export default function TopicEditor({
                   >
                     <SanEDDButton
                       onClick={() => {
-                        // let newTopic = Object.assign({}, topicData);
                         let newSteps = topicData.steps;
-                        newSteps.push({
-                          sid: getNextSID(),
-                          title: "",
-                          type: stepType.Theory,
-                          timeLength: "9 minutes",
-                          problemsSolved: "0 / 1 problems solved",
-                          sections: [
-                            {
-                              title: "",
-                              content: "",
-                            },
-                          ],
-                        });
+                        newSteps.push(newTopicStepTheory(getNextSID()));
                         setUnsavedChanges(true);
                         setTopicData({ ...topicData, steps: newSteps });
                       }}
@@ -455,7 +443,7 @@ export default function TopicEditor({
         </DragDropContext>
       </div>
       {/* Right section */}
-      <div className="w-full">
+      <div className="w-0 min-w-[83%]">
         {console.log("Selected step is ", selectedStep.stepType)}
         {selectedStep.stepType === stepType.Info ? (
           <TopicInfoStep
