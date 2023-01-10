@@ -5,7 +5,7 @@ import ListContainer from "./ListItems/ListContainer";
 import SectionHeader from "./Texts/SectionHeader";
 import colors from "../config/colors";
 import JSONViewer from "./JSONViewer";
-import { breadString } from "../config/utils";
+import { breadString } from "../lib/utils";
 import dimensions from "../config/dimensions";
 import APIEndpoints from "../config/APIEndpoints";
 import TopicSelectModal from "./TopicSelectModal";

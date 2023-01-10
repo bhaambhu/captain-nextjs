@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma";
+import prisma from "./prisma";
 
 function breadString(breadcrumbs, includeSelf = false) {
   let iterateUpto = includeSelf ? breadcrumbs.length : breadcrumbs.length - 1;
@@ -14,6 +14,10 @@ function breadString(breadcrumbs, includeSelf = false) {
   // }
   return theString;
 }
+
+function truncateString(str, n){
+  return (str.length > n) ? str.slice(0, n-1) + '...' : str;
+};
 
 function viewableDateTime(input) {
   return new Date(input).toLocaleString([], {day:"numeric", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit", hour12: true});
@@ -47,4 +51,4 @@ function makeSubjectAPIDataReadyForAtlaskit(apiReceivedSubjectData) {
 //   `
 // }
 
-export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime, confirmation };
+export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime, confirmation, truncateString };

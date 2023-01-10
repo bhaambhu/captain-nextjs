@@ -5,13 +5,14 @@ import ListContainer from "../ListItems/ListContainer";
 import SectionHeader from "../Texts/SectionHeader";
 import colors from "../../config/colors";
 import JSONViewer from "../JSONViewer";
-import { breadString } from "../../config/utils";
+import { breadString } from "../../lib/utils";
 import Modal from "../Modal";
 import TopicSelectModal from "../TopicSelectModal";
 import SubjectSelectModal from "../SubjectSelectModal";
 import APIEndpoints from "../../config/APIEndpoints";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
 import twColors from "../../config/twColors";
+import MobileTopicPreview from "../MobilePreview/MobileTopicPreview";
 
 const topic_example = {
   breadcrumbs: [
@@ -210,7 +211,9 @@ export default function TopicInfoStep({
         >
           Delete This Topic
         </Button>
-        <JSONViewer heading={'JSON View'}>{topicData}</JSONViewer>
+        <SectionHeader>PREVIEW</SectionHeader>
+        <MobileTopicPreview topicData={topicData} />
+        {/* <JSONViewer heading={'JSON View'}>{topicData}</JSONViewer> */}
       </ListContainer>
     );
 }

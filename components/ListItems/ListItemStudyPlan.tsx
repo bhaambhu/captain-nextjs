@@ -45,7 +45,7 @@ export default function ListItemStudyPlan({
         rounded-sm 
         p-0.5
         px-1
-        mt-1
+        mt-2
         text-san-on-primary-container
         border
         border-current

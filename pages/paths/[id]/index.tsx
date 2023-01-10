@@ -16,7 +16,7 @@ import Subtitle from '../../../components/Texts/Subtitle';
 import APIEndpoints from '../../../config/APIEndpoints';
 import routes from '../../../config/routes';
 import twColors from '../../../config/twColors';
-import { confirmation } from '../../../config/utils';
+import { confirmation } from '../../../lib/utils';
 import pathsAPIService from '../../../lib/APIServices/pathsAPIService';
 import useAuth from '../../../lib/auth/useAuth';
 import { pathDBHelper } from '../../../lib/DBHelpers/pathDBHelper';
@@ -86,7 +86,6 @@ export default function Path() {
         </SectionHeader>
         <div className='flex'>
           <MobilePathPreview data={pathDetailsAPI.data} />
-          <JSONViewer className='mt-3'>{pathDetailsAPI.data}</JSONViewer>
         </div>
       </div>
     </div>

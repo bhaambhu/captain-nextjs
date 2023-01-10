@@ -7,6 +7,8 @@ import colors from "../../config/colors";
 import JSONViewer from "../JSONViewer";
 import Toggle from "../Toggle";
 import twColors from "../../config/twColors";
+import InfoPill from "../Pills/InfoPill";
+import MobilePathPreview from "../MobilePreview/MobilePathPreview";
 
 export default function PathInfoStep({
   pathData,
@@ -14,7 +16,7 @@ export default function PathInfoStep({
   onDeletePath,
 }) {
   return (
-    <ListContainer className={twColors.surface2}>
+    <ListContainer className={twColors.surface2 + 'w-full'}>
       <SanEDDButton
         overline="TITLE"
         placeholder="Enter Path Title"
@@ -61,7 +63,11 @@ export default function PathInfoStep({
       >
         Delete This Path
       </Button>
-      <JSONViewer heading={"JSON View"}>{pathData}</JSONViewer>
+      <SectionHeader className='flex items-center gap-3 mt-3'>PREVIEW
+        <InfoPill message="Only for illustration, does not mimic the mobile app" />
+      </SectionHeader>
+      <MobilePathPreview data={pathData} />
+      {/* <JSONViewer heading={"JSON View"}>{pathData}</JSONViewer> */}
     </ListContainer>
   );
 }

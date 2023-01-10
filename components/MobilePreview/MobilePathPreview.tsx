@@ -4,16 +4,21 @@ import { twMerge } from 'tailwind-merge'
 import { activityState } from '../../config/enums'
 import topicsAPIService from '../../lib/APIServices/topicsAPIService'
 import useAPI from '../../lib/useAPI'
+import JSONViewer from '../JSONViewer'
 import ListItemStudyPlan from '../ListItems/ListItemStudyPlan'
 import LottiePlayer from '../LottiePlayer'
 import MobileScreenContainer from './MobileScreenContainer'
 import { TopicPreview } from './MobileTopicPreview'
 
-export default function MobilePathPreview({ data }) {
+export default function MobilePathPreview({ data, showJSON = false }) {
   return (
-    <MobileScreenContainer>
-      <PathPreview pathData={data} />
-    </MobileScreenContainer>
+    <div className='flex ml-3'>
+      <MobileScreenContainer>
+        <PathPreview pathData={data} />
+      </MobileScreenContainer>
+      {showJSON && <JSONViewer className='mt-3'>{data}</JSONViewer>}
+    </div>
+
   )
 }
 
@@ -28,15 +33,15 @@ function PathPreview({ pathData }) {
   let maxTopicIndex = pathData.topic_sequence.length - 1;
   async function loadNextTopicData() {
     if (currentTopicIndex < maxTopicIndex) {
-      return await loadTopicData(currentTopicIndex+1);
-    }else {
+      return await loadTopicData(currentTopicIndex + 1);
+    } else {
       useLoadTopicAPI.setLoadedOnce(false)
     }
   }
 
   return (
     <div className='relative w-full h-full'>
-      <div className=' w-full h-full absolute'>
+      <div className=' w-full h-full absolute overflow-hidden'>
         {useLoadTopicAPI.loadedOnce ?
           <TopicPreview
             topicData={useLoadTopicAPI.data}
@@ -63,13 +68,15 @@ function AboutPathScreen({ pathData, onClickTopicButton }) {
   return (
     <div className='px-3 mt-3'>
       {/* Title Section */}
-      <div className='flex flex-row flex-wrap items-end'>
-        <PageHeading>Study Path</PageHeading>
-        <span className='font-subtitle_1 text-xs'>for {pathData.title}</span>
+      <div className='flex flex-col'>
+        {/* Overline */}
+        <div className='font-overline text-xs text-san-on-surface-variant'>STUDY PATH <span className='font-caption ml-1 '>for</span></div>
+        {/* Path Title */}
+        <div className='font-h1_headline text-3xl mt-1 break-words'>{pathData.title}</div>
       </div>
 
       {/* About */}
-      <span className='font-subtitle_1 text-xs'>{pathData.about}</span>
+      <div className='font-subtitle_1 text-xs mt-2'>{pathData.about}</div>
 
       {/* Topics */}
       {pathData.topic_sequence.map((object, i) => {

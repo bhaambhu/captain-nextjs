@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import SectionHeader from "./Texts/SectionHeader";
-import { breadString } from "../config/utils";
 import ListContainer from "./ListItems/ListContainer";
 import SanEDDButton from "./Buttons/SanEDDButton";
 import topicsAPIService from "../lib/APIServices/topicsAPIService";
@@ -11,10 +10,13 @@ import { loadSubjects, SubjectTree } from "./SubjectTree";
 import twColors from "../config/twColors";
 import { TiDelete } from "react-icons/ti";
 import { twMerge } from "tailwind-merge";
+import { breadString } from "../lib/utils";
+import ContainerWithLoading from "./ContainerWithLoading";
 
 export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
   const [tree, setTree] = useState(null);
-  const [networkLoading, setNetworkLoading] = useState(true);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [loadingTree, setLoadingTree] = useState(true)
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedSubjectId, setSelectedSubjectId] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -24,27 +26,27 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
 
   const loadSelectedSubject = async (subject_id) => {
     if (selectedSubject != null && selectedSubject.id == subject_id) return;
-    setNetworkLoading(true);
+    setDetailsLoading(true);
     console.log("fetching selected subject's details...");
     const result = await subjectsAPIService.getSubjectDetail(subject_id)
     if (!result.ok) return "Error: " + result.problem;
     console.log(result.data);
     setSelectedSubject(result.data);
-    setNetworkLoading(false);
+    setDetailsLoading(false);
     return result.data;
   };
 
   const createNewTopicAndCloseModal = async (name, subjectId) => {
-    setNetworkLoading(true);
+    setDetailsLoading(true);
     const result = await topicsAPIService.createTopic(name, subjectId);
     if (!result.ok) return alert("Error: " + result.problem);
-    setNetworkLoading(false);
+    setDetailsLoading(false);
     onSelectTopic(result.data);
     console.log("done");
   };
 
   useEffect(() => {
-    loadSubjects(setNetworkLoading, setTree);
+    loadSubjects(setLoadingTree, setTree);
   }, []);
 
   useEffect(() => {
@@ -61,11 +63,11 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
         >
           {/* The Window */}
           <div
-            className={twMerge(twColors.primaryContainer + ' w-[80%] h-[80%] flex flex-col p-3 rounded-sm border ')}
+            className={twMerge(twColors.primaryContainer + ' w-[80%] h-[80%] flex flex-col rounded-sm border ')}
           >
             {/* Top Area - Heading and Close Button */}
-            <div className="flex justify-between items-center">
-              <SectionHeader bar={false} className='uppercase text-xl'>{heading}</SectionHeader>
+            <div className="flex justify-between items-center p-1">
+              <SectionHeader bar={false} className='uppercase text-xl px-1'>{heading}</SectionHeader>
               <div className="text-4xl leading-none flex cursor-pointer" title='Close Window'>
                 <TiDelete
                   onClick={onCancel}
@@ -77,14 +79,14 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
 
             {/* Bottom Area - Content */}
             <div
-              className="flex h-full mt-2.5 justify-between"
+              className={twMerge(twColors.surface2 + "flex h-full justify-between p-3 ")}
             >
 
               {/* Left Area - Subject Tree */}
               <div
-                className={twMerge(twColors.surface2+'h-full overflow-y-auto w-full leading-8 p-1 rounded-md border shadow-inner')}
+                className={twMerge('h-full overflow-y-auto w-full leading-8 p-1 ')}
               >
-                {networkLoading ? (
+                {loadingTree ? (
                   "Loading..."
                 ) : (
                   <SubjectTree
@@ -104,46 +106,48 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
                 className="w-[50%]"
               >
                 <div className="ml-2 h-full flex flex-col justify-between">
-                  <ListContainer className={twMerge(twColors.surface3+' border-current shadow-lg')}>
-                    {selectedSubject ? (
-                      <>
-                        <SectionHeader bar={false} className='uppercase'>{selectedSubject.name}</SectionHeader>
-                        <SectionHeader>TOPICS</SectionHeader>
-                        {selectedSubject.topics.map((item) => {
-                          return (
-                            <SanEDDButton
-                              key={item.id}
-                              overline={item.about}
-                              title={item.title}
-                              onClick={() => {
-                                setSelectedTopic({
-                                  ...selectedTopic,
-                                  ...item,
-                                });
-                              }}
-                              selected={selectedTopic?.id === item.id}
-                            />
-                          );
-                        })}
-                        <SectionHeader>ACTIONS ON SUBJECT</SectionHeader>
-                        <SanEDDButton
-                          overline={"Create New"}
-                          title={"TOPIC"}
-                          className={twColors.addContainer}
-                          onClick={() => {
-                            const topicName = window.prompt(
-                              "Enter new topic's name:"
+                  <ContainerWithLoading loading={detailsLoading} className=' '>
+                    <ListContainer className={twMerge(twColors.surface1 + ' border-current shadow-lg w-full')}>
+                      {selectedSubject ? (
+                        <>
+                          <SectionHeader bar={false} className='uppercase'>{selectedSubject.name}</SectionHeader>
+                          <SectionHeader>TOPICS</SectionHeader>
+                          {selectedSubject.topics.map((item) => {
+                            return (
+                              <SanEDDButton
+                                key={item.id}
+                                overline={item.about}
+                                title={item.title}
+                                onClick={() => {
+                                  setSelectedTopic({
+                                    ...selectedTopic,
+                                    ...item,
+                                  });
+                                }}
+                                selected={selectedTopic?.id === item.id}
+                              />
                             );
-                            if (topicName === null) return;
-                            createNewTopicAndCloseModal(
-                              topicName,
-                              selectedSubject.id
-                            );
-                          }}
-                        />
-                      </>
-                    ) : <div>Select a subject to list its topics</div>}
-                  </ListContainer>
+                          })}
+                          <SectionHeader>ACTIONS ON SUBJECT</SectionHeader>
+                          <SanEDDButton
+                            overline={"Create New"}
+                            title={"TOPIC"}
+                            className={twColors.addContainer}
+                            onClick={() => {
+                              const topicName = window.prompt(
+                                "Enter new topic's name:"
+                              );
+                              if (topicName === null) return;
+                              createNewTopicAndCloseModal(
+                                topicName,
+                                selectedSubject.id
+                              );
+                            }}
+                          />
+                        </>
+                      ) : <div>Select a subject to list its topics</div>}
+                    </ListContainer>
+                  </ContainerWithLoading>
                   {selectedTopic && (
                     <Button
                       className={twColors.add + ' self-end shadow-lg '}

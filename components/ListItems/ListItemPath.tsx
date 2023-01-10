@@ -2,6 +2,7 @@ import React from "react";
 import { RiDragMoveFill } from "react-icons/ri";
 import { MdDeleteForever } from "react-icons/md";
 import { useRouter } from "next/router";
+import { truncateString } from "../../lib/utils";
 
 export default function ListItemPath({
   overline,
@@ -54,10 +55,10 @@ export default function ListItemPath({
             />
           )}
           <div className="text-xs font-overline">
-            {overline}
+            {truncateString(overline, 30)}
           </div>
         </div>
-        <div className="font-overline mr-5">
+        <div className="font-overline">
           {onChange ? (
             <div className="flex">
               <input
@@ -71,7 +72,7 @@ export default function ListItemPath({
               />
             </div>
           ) : (
-            <div>{title}</div>
+            <div>{truncateString(title, 40)}</div>
           )}
         </div>
         <div className={`font-overline text-xs self-end bg-san-dark-surface-variant rounded-tl-sm p-1 mt-2 -mr-1 -mb-1 ${published ? 'text-san-positive-container' : 'text-cclrs-bg-yellow'}`} >

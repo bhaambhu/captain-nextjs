@@ -14,9 +14,12 @@ export default function MarkdownEditor({ value, onChange }) {
   return (
     <div data-color-mode={theme} className='border border-current rounded-sm'>
       <MEd
-        className='min-h-[65vh] h-0 text-base'
+        className='text-base'
         value={value}
         visible
+        height='65vh'
+        enableScroll={false}
+        indentWithTab={true}
         onChange={(value, viewUpdate) => onChange(value)}
       />
     </div>

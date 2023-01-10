@@ -4,7 +4,7 @@ import { Button } from '../../components/Buttons/Button';
 import JSONViewer from '../../components/JSONViewer';
 import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import twColors from '../../config/twColors';
-import { viewableDateTime } from '../../config/utils';
+import { viewableDateTime } from '../../lib/utils';
 import usersAPIService from '../../lib/APIServices/usersAPIService';
 import useAPI from '../../lib/useAPI';
 

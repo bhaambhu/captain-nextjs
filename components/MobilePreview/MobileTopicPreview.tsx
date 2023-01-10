@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { stepType } from '../../config/enums'
-import { breadString } from '../../config/utils'
+import { breadString } from '../../lib/utils'
 import JSONViewer from '../JSONViewer'
 import MarkdownPreview from '../Markdown/MarkdownPreview'
 import MobileScreenContainer from './MobileScreenContainer'
@@ -12,38 +12,40 @@ import { MdCheck, MdOutlineArrowBackIos, MdOutlineCheckCircle, MdRadioButtonUnch
 import { ImCheckmark, ImCross } from 'react-icons/im'
 import LottiePlayer from '../LottiePlayer'
 
-export default function MobileTopicPreview({ topicData }) {
+export default function MobileTopicPreview({ topicData, showJSON = false }) {
 
   return (
-    <div className='flex'>
+    <div className='flex ml-3'>
       <MobileScreenContainer>
         <TopicPreview topicData={topicData} />
       </MobileScreenContainer>
-      <JSONViewer>{topicData}</JSONViewer>
+      {showJSON && <JSONViewer>{topicData}</JSONViewer>}
     </div>
   )
 }
 
-export function TopicPreview({ topicData, onBackButton, onProceedToNextTopicButton, proceedToNextTopicButtonText='Continue to Next Topic' }) {
+export function TopicPreview({ topicData, onBackButton, onProceedToNextTopicButton, proceedToNextTopicButtonText = 'Continue to Next Topic' }) {
   const [selectedStepIndex, setSelectedStepIndex] = useState(0)
   let maxStepIndex = topicData.steps.length - 1;
 
   const ref = useRef<HTMLElement>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedStepIndex(0)
   }, [topicData])
-  
+
   return (
     <>
       {selectedStepIndex <= maxStepIndex ?
-        <ScrollContainer ref={ref} className='p-3 w-full h-0 min-h-full overflow-auto cursor-pointer'>
+        <ScrollContainer ref={ref} className='p-3 w-0 min-w-full h-0 min-h-full overflow-auto cursor-pointer'>
 
           {/* <div className='p-3 w-full h-0 min-h-full overflow-auto'> */}
           {/* Breadcrumbs & Back Button */}
           <div className='font-mono font-bold flex flex-wrap text-cclrs-light-disabled text-xs gap-1 items-center'>
-            {onBackButton && <div onClick={onBackButton} className='border p-0.5 border-current rounded-sm'><MdOutlineArrowBackIos /></div>}
-            {breadString(topicData.breadcrumbs, true) + ' > '}
+            {onBackButton && <div onClick={onBackButton} className='flex uppercase border p-[1px] px-[2px] text-[10px] border-current items-center rounded-sm'><MdOutlineArrowBackIos size={8} /><span className='ml-0.5 mt-[1px]'>Back to path</span></div>}
+            <div className='mt-1 uppercase'>
+              {breadString(topicData.breadcrumbs, true) + ' > '}
+            </div>
           </div>
           <div className='font-h1_headline text-2xl mt-1'>{topicData.title}</div>
           <StepsTabsNavbar stepsData={topicData.steps} selectedStepID={selectedStepIndex} setSelectedStepID={setSelectedStepIndex} />
@@ -74,7 +76,7 @@ export function TopicPreview({ topicData, onBackButton, onProceedToNextTopicButt
             setSelectedStepIndex(0);
             ref.current?.scrollTo({ top: 0 });
           }}
-          proceedButtonText={onProceedToNextTopicButton? proceedToNextTopicButtonText : 'Restart'}
+          proceedButtonText={onProceedToNextTopicButton ? proceedToNextTopicButtonText : 'Restart'}
         />
       }
     </>
@@ -131,7 +133,7 @@ function MCQStepPreview({ stepData, onProceedButtonClick }) {
               Correct
             </div>
             {/* Explanation */}
-            <div>
+            <div className='text-xs'>
               {stepData.explanation}
             </div>
             <div onClick={onProceedButtonClick} className='cursor-pointer border border-current w-fit self-end mt-3 bg-cclrs-bg-yellow px-1 py-0.5 rounded-sm font-overline'>

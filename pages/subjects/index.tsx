@@ -22,7 +22,7 @@ import twColors from '../../config/twColors';
 import { SubjectTree, subjectDataFormat, loadSubjects } from '../../components/SubjectTree';
 import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import useAPI from '../../lib/useAPI';
-import { confirmation } from '../../config/utils';
+import { confirmation } from '../../lib/utils';
 import useAuth from '../../lib/auth/useAuth';
 import InfoPill from '../../components/Pills/InfoPill';
 

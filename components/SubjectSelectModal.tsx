@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import SectionHeader from "./Texts/SectionHeader";
 import { Button } from "./Buttons/Button";
-import { breadString } from "../config/utils";
+import { breadString } from "../lib/utils";
 import twColors from "../config/twColors";
 import { loadSubjects, SubjectTree } from "./SubjectTree";
 import { TiDelete } from "react-icons/ti";

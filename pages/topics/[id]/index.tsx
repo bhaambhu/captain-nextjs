@@ -13,7 +13,7 @@ import TopicPreview from '../../../components/Topic/TopicPreview';
 import APIEndpoints from '../../../config/APIEndpoints';
 import routes from '../../../config/routes';
 import twColors from '../../../config/twColors';
-import { confirmation } from '../../../config/utils';
+import { confirmation } from '../../../lib/utils';
 import topicsAPIService from '../../../lib/APIServices/topicsAPIService';
 import useAuth from '../../../lib/auth/useAuth';
 import { topicDBHelper } from '../../../lib/DBHelpers/topicDBHelper';

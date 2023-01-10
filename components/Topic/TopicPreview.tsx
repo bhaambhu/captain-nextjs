@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { confirmation } from '../../config/utils';
+import { confirmation } from '../../lib/utils';
 import topicsAPIService from '../../lib/APIServices/topicsAPIService';
 import useAuth from '../../lib/auth/useAuth'
 import useAPI from '../../lib/useAPI';
