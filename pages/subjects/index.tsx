@@ -1,30 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import JSONViewer from '../../components/JSONViewer';
-import Modal from '../../components/Modal';
 import subjectsAPIService from '../../lib/APIServices/subjectsAPIService';
-import Spinner from "@atlaskit/spinner";
-import Tree, {
-  mutateTree,
+import {
   moveItemOnTree,
-  RenderItemParams,
-  TreeItem,
-  TreeData,
-  ItemId,
-  TreeSourcePosition,
-  TreeDestinationPosition,
 } from '@atlaskit/tree';
 import SubjectInfo from '../../components/SubjectInfo';
 import topicsAPIService from '../../lib/APIServices/topicsAPIService';
 import { Button } from '../../components/Buttons/Button';
 import SectionHeader from '../../components/Texts/SectionHeader';
-import { twMerge } from 'tailwind-merge';
 import twColors from '../../config/twColors';
-import { SubjectTree, subjectDataFormat, loadSubjects } from '../../components/SubjectTree';
+import { SubjectTree, loadSubjects } from '../../components/SubjectTree';
 import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import useAPI from '../../lib/useAPI';
 import { confirmation } from '../../lib/utils';
 import useAuth from '../../lib/auth/useAuth';
-import InfoPill from '../../components/Pills/InfoPill';
 
 export default function Subjects(props) {
   const [treeData, setTreeData] = useState(null);
@@ -246,14 +235,14 @@ export default function Subjects(props) {
   //   return <LoadingIndicatorFullScreen visible={true} />
   // }
   return (
-    <div className='flex p-3 gap-3'>
+    <div className='flex flex-col sm:flex-row p-3 gap-3'>
       {/* <Prompt
           when={pendingChanges}
           message="You have unsaved changes that will be forgotten. Are you sure you want to leave?"
         /> */}
       <LoadingIndicatorFullScreen visible={networkLoading || useGetSubjectDetailAPI.loading || useSaveSubjectDetailAPI.loading || useCreateSubjectAPI.loading} />
       {/* Left Side Content and Tree */}
-      <div className={twColors.surface1+' border p-3 h-fit rounded-sm w-full flex leading-8 flex-col'}>
+      <div className={twColors.surface1 + ' border p-3 h-fit rounded-sm w-full flex leading-8 flex-col'}>
         <div className='flex justify-between'>
           <SectionHeader bar={false} className='mb-3 inline'>SUBJECTS </SectionHeader>
           {auth.isStaff() && <Button
@@ -269,6 +258,7 @@ export default function Subjects(props) {
         </div>
         {treeData &&
           <SubjectTree
+            className='mt-3'
             treeData={treeData}
             setTreeData={setTreeData}
             selectedSubjectId={selectedSubjectId}

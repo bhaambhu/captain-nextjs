@@ -48,7 +48,7 @@ const loadSubjects = async (setNetworkLoading, setTreeData) => {
   return result.data;
 }
 
-function SubjectTree({ treeData, setTreeData, selectedSubjectId, setSelectedSubjectId, isNestingEnabled = false, onDropSubjectOnSubject = null, onDropTopicOnSubject = null }) {
+function SubjectTree({ className='', treeData, setTreeData, selectedSubjectId, setSelectedSubjectId, isNestingEnabled = false, onDropSubjectOnSubject = null, onDropTopicOnSubject = null }) {
 
 
   const PADDING_PER_LEVEL = 16;
@@ -171,7 +171,7 @@ function SubjectTree({ treeData, setTreeData, selectedSubjectId, setSelectedSubj
   };
 
   return (
-    <div>
+    <div className={className}>
       {onDropSubjectOnSubject && <div className='w-fit mb-3'>
         <InfoPill message="Drag subjects to change order or group together" />
       </div>}

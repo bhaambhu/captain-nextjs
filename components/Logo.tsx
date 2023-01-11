@@ -9,7 +9,7 @@ type AppProps = {
 function Logo({children}:AppProps) {
   return (
     <Link
-    className='font-logo text-xl'
+    className='font-logo text-3xl'
     href={"/"}
     >
       {children}

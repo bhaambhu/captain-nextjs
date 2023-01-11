@@ -17,7 +17,7 @@ import twColors from '../../config/twColors'
 export default function MobileTopicPreview({ topicData, showJSON = false }) {
 
   return (
-    <div className='flex ml-3'>
+    <div className=' w-full sm:ml-3 '>
       <MobileScreenContainer>
         <TopicPreview topicData={topicData} />
       </MobileScreenContainer>

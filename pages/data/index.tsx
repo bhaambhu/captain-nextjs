@@ -57,11 +57,11 @@ function DataInfoViewer() {
       {
         Object.entries(dataInfo).map(entry => {
           return (
-            <div key={entry[0]}>
+            <div key={entry[0]} className='max-sm:w-full'>
               <SectionHeader className="uppercase" bar={false}>
                 {entry[0]}
               </SectionHeader>
-              <table className="mt-3">
+              <table className="mt-3 w-full">
                 {entry[1].map((item) => {
                   return (
                     <tr key={item[0]}>

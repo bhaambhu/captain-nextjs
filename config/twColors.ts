@@ -39,12 +39,14 @@ export default Object.freeze({
 
   inputField: ' bg-san-surface text-san-on-surface dark:bg-san-dark-surface dark:text-san-dark-on-surface border-current ',
 
-  inputFieldReadonly: ' bg-san-surface-variant text-san-on-surface-variant dark:bg-san-dark-surface-variant dark:text-san-dark-on-surface-variant border-current ',
+  disabledContainer: ' bg-san-surface-variant text-san-on-surface-variant dark:bg-san-dark-surface-variant dark:text-san-dark-on-surface-variant border-current ',
 
   // For CheckboxPill Element
   checked: ' bg-blue-500 accent-blue-500 text-san-on-primary ',
   unchecked: ' bg-san-on-surface dark:bg-san-dark-on-surface text-san-surface dark:text-san-dark-surface ',
 
+  
+  
   // For modals and windows
   window: ' bg-san-primary-container text-san-on-primary-container border-current ',
 

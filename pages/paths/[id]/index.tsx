@@ -1,25 +1,17 @@
-import { truncate } from 'fs';
-import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button } from '../../../components/Buttons/Button';
-import JSONViewer from '../../../components/JSONViewer';
 import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
 import MobilePathPreview from '../../../components/MobilePreview/MobilePathPreview';
-import Modal from '../../../components/Modal';
 import InfoPill from '../../../components/Pills/InfoPill';
 import H1 from '../../../components/Texts/H1';
-import H2 from '../../../components/Texts/H2';
-import H3 from '../../../components/Texts/H3';
 import SectionHeader from '../../../components/Texts/SectionHeader';
 import Subtitle from '../../../components/Texts/Subtitle';
-import APIEndpoints from '../../../config/APIEndpoints';
 import routes from '../../../config/routes';
 import twColors from '../../../config/twColors';
 import { confirmation } from '../../../lib/utils';
 import pathsAPIService from '../../../lib/APIServices/pathsAPIService';
 import useAuth from '../../../lib/auth/useAuth';
-import { pathDBHelper } from '../../../lib/DBHelpers/pathDBHelper';
 import useAPI from '../../../lib/useAPI';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -76,15 +68,23 @@ export default function Path() {
         {pathDetailsAPI.data.about && <Subtitle>{pathDetailsAPI.data.about}</Subtitle>}
         {/* Action Buttons */}
         {auth.canAuthor(pathDetailsAPI.data.author) && <div className='flex gap-3 mt-3'>
-          <Button className={twColors.addContainer} onClick={() => {
+          <Button className={twColors.addContainer + 'max-sm:hidden'} onClick={() => {
             router.push(router.asPath + '/edit/')
+          }}>Edit</Button>
+          <Button className={twColors.disabledContainer + 'sm:hidden'} onClick={() => {
+            alert("The user-interface for editing a path is very comprehensive, so it has been disabled for phones. You can edit on any large-screen device.")
           }}>Edit</Button>
           <Button className={twColors.deleteContainer} onClick={deletePath}>Delete</Button>
         </div>}
+        {!auth.canAuthor(pathDetailsAPI.data.author) &&
+          <div className='mt-3 w-fit'>
+            <InfoPill message='Only the author can modify this path' />
+          </div>
+        }
         <SectionHeader className='flex items-center gap-3 mt-3'>PREVIEW
           <InfoPill message="Only for illustration, does not mimic the mobile app" />
         </SectionHeader>
-        <div className='flex'>
+        <div className='flex max-sm:justify-center'>
           <MobilePathPreview data={pathDetailsAPI.data} />
         </div>
       </div>

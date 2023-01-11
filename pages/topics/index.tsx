@@ -8,6 +8,7 @@ import APIEndpoints from "../../config/APIEndpoints";
 import useAuth from "../../lib/auth/useAuth";
 import useAPI from "../../lib/useAPI";
 import LoadingIndicatorFullScreen from "../../components/Loading/LoadingIndicatorFullScreen";
+import ListItemPath from "../../components/ListItems/ListItemPath";
 
 export default function Topics() {
   const getTopicsAPI = useAPI(topicsAPIService.getTopics);
@@ -91,18 +92,28 @@ function TopicsGrid({ topics, onCreatedTopic = null, heading = '' }) {
     <div className={' p-3 flex flex-col gap-3 '} >
       {heading && <SectionHeader bar={false} className='uppercase'>{heading}</SectionHeader>}
       {/* Topics grid */}
-      <div className='flex flex-wrap gap-3'>
+      <div className='flex flex-col flex-wrap sm:flex-row gap-3'>
         {topics.map((item) => {
           return (
-            <SanEDDButton
+            <ListItemPath
               key={item.id}
-              className='border-cclrs-dark-strong bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface '
               to={APIEndpoints.TOPICS + item.id}
-              style={{ width: 200 }}
-              title={item.title}
+              className='w-full sm:w-fit'
+              published={false}
+              showBadge={false}
+              title={item.title ? item.title : "No Title"}
+              // overline={item.about ? item.about : "No Description"}
               overline={item.authorName}
-              // overline={item.about}
             />
+            // <SanEDDButton
+            //   key={item.id}
+            //   className='border-cclrs-dark-strong bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface w-full'
+            //   to={APIEndpoints.TOPICS + item.id}
+            //   style={{ width: 200 }}
+            //   title={item.title}
+            //   overline={item.authorName}
+            //   // overline={item.about}
+            // />
           );
         })}
         {onCreatedTopic &&

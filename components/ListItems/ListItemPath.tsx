@@ -8,6 +8,7 @@ export default function ListItemPath({
   overline,
   title,
   published = false,
+  showBadge=true,
   className = '',
   placeholder = "Enter Step Title",
   draggable = false,
@@ -33,7 +34,7 @@ export default function ListItemPath({
         e.stopPropagation();
       }}
       draggable={topicToSubjectDraggable}
-      className={`flex border-cclrs-dark-strong w-fit cursor-pointer ${published ? 'bg-san-positive-container text-san-on-positive-container dark:bg-san-dark-positive dark:text-san-dark-on-positive' : 'bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface'} border rounded-sm ${className}`}
+      className={`flex w-fit cursor-pointer ${published ? 'bg-san-positive-container text-san-on-positive-container dark:bg-san-dark-positive dark:text-san-dark-on-positive' : 'bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface'} border border-current rounded-sm ${className}`}
       {...otherprops}
     >
       {onDelete && (
@@ -44,9 +45,7 @@ export default function ListItemPath({
           />
         </div>
       )}
-      <div
-        onClick={onClick} className={`flex flex-col p-1 justify-between`}
-      >
+      <div onClick={onClick} className={`flex flex-col p-1 justify-between w-full sm:w-fit`}>
         <div className="flex items-center mb-1">
           {draggable && (
             <RiDragMoveFill
@@ -54,11 +53,11 @@ export default function ListItemPath({
               className="cursor-move mr-1"
             />
           )}
-          <div className="text-xs font-overline">
+          <div className="text-sm font-overline">
             {truncateString(overline, 30)}
           </div>
         </div>
-        <div className="font-overline">
+        <div className="font-overline text-xl">
           {onChange ? (
             <div className="flex">
               <input
@@ -75,9 +74,9 @@ export default function ListItemPath({
             <div>{truncateString(title, 40)}</div>
           )}
         </div>
-        <div className={`font-overline text-xs self-end bg-san-dark-surface-variant rounded-tl-sm p-1 mt-2 -mr-1 -mb-1 ${published ? 'text-san-positive-container' : 'text-cclrs-bg-yellow'}`} >
+        {showBadge && <div className={`font-overline text-xs border-l border-t border-current self-end bg-san-dark-surface-variant rounded-tl-sm p-1 mt-2 -mr-1 -mb-1 ${published ? 'text-san-positive-container' : 'text-cclrs-bg-yellow'}`} >
           {published ? "PUBLISHED" : "DRAFT"}
-        </div>
+        </div>}
       </div>
     </div>
   );

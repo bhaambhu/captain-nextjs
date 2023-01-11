@@ -106,12 +106,13 @@ function PathsGrid({ paths, onCreatedPath = null, heading = '' }) {
     <div className={' p-3 flex flex-col gap-3 '} >
       {heading && <SectionHeader bar={false} className='uppercase'>{heading}</SectionHeader>}
       {/* Paths grid */}
-      <div className='flex flex-wrap gap-3'>
+      <div className='flex flex-col flex-wrap sm:flex-row gap-3'>
         {paths.map((item) => {
           return (
             <ListItemPath
               key={item.id}
               to={`paths/${item.id}`}
+              className='w-full sm:w-fit'
               published={item.published}
               title={item.title ? item.title : "No Title"}
               // overline={item.about ? item.about : "No Description"}
@@ -127,6 +128,7 @@ function PathsGrid({ paths, onCreatedPath = null, heading = '' }) {
               const about = window.prompt("Enter new path's description:");
               createPath(title, about);
             }}
+            className=' bg-san-positive-container text-san-on-positive-container dark:bg-san-dark-positive dark:text-san-dark-on-positive border-current'
             style={{ width: 200 }}
             title={"Create New Path"}
           />

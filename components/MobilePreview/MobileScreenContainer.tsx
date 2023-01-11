@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function MobileScreenContainer({ children }) {
   return (
     // Dimensions of Image
-    <div className='min-w-[314px] w-[314px] h-[641px] mt-3 select-none bg-transparent drop-shadow-2xl'>
+    <div className='min-w-[314px] w-[314px] max-sm:mx-auto max-sm:flex justify-center h-[641px] mt-3 select-none bg-transparent drop-shadow-2xl'>
       {/* Container */}
       <div className='w-[80%] h-[80%] relative grid'>
         <Image src={'/assets/iphone-trimmed.png'} alt='Iphone for illustration' fill />

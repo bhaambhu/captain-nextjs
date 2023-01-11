@@ -12,7 +12,7 @@ import { TopicPreview } from './MobileTopicPreview'
 
 export default function MobilePathPreview({ data, showJSON = false }) {
   return (
-    <div className='flex ml-3'>
+    <div className='w-full sm:ml-3 '>
       <MobileScreenContainer>
         <PathPreview pathData={data} />
       </MobileScreenContainer>

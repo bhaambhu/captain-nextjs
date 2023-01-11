@@ -24,7 +24,7 @@ export default function SubjectInfo({
   const [showTopicSelector, setShowTopicSelector] = useState(false);
   const auth = useAuth();
   return (
-    <div className="max-w-[40%]">
+    <div className="sm:max-w-[40%]">
       {showTopicSelector && (
         <TopicSelectModal
           heading={"Select Topic"}
@@ -112,7 +112,7 @@ export default function SubjectInfo({
               Create Child Subject
             </Button>
           </div></>}
-        <JSONViewer heading={'RAW DATA'}>{data}</JSONViewer>
+        {/* <JSONViewer heading={'RAW DATA'}>{data}</JSONViewer> */}
       </ListContainer>
     </div>
   );

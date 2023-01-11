@@ -65,7 +65,7 @@ export default function Profile() {
   return (
     <div className='flex items-center justify-center'>
       <div className={twMerge(twColors.surface1 + ' w-fit m-3 border p-3 ')}>
-        <SectionHeader className='mb-3 mt-0'>UPDATE DETAILS</SectionHeader>
+        <SectionHeader className='mb-3 mt-0' bar={false}>UPDATE DETAILS</SectionHeader>
         <LoadingIndicatorFullScreen visible={updateAPI.loading || deleteAPI.loading} />
         {console.log(auth.user)}
         <table className='table-fixed'>
@@ -120,7 +120,7 @@ export default function Profile() {
                 </td>
                 <td className='p-3'>
                   <input
-                    className={twMerge(twColors.inputFieldReadonly + "border resize-y p-2 font-overline ")}
+                    className={twMerge(twColors.disabledContainer + "border resize-y p-2 font-overline ")}
                     value={auth.user.email}
                     readOnly
                   />

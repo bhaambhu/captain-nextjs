@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react'
 import { CSSProperties } from 'react'
@@ -8,17 +7,20 @@ import twColorTheme from '../config/twColors';
 type AppProps = {
   to: string;
   children: ReactNode;
-  style?: CSSProperties;
+  className?: string;
 }
 
-function NavBarLink({ style, to, children }: AppProps) {
+function NavBarLink({ className, to, children }: AppProps) {
   const router = useRouter();
   return (
-    <Link
+    <button
       className={
-        twMerge(((router.pathname == to) ? twColorTheme.twNavbarLinkColors.current : twColorTheme.twNavbarLinkColors.others) + 'font-button')
+        twMerge(((router.pathname == to) ? twColorTheme.twNavbarLinkColors.current : twColorTheme.twNavbarLinkColors.others) + 'font-button pointer-events-auto')
       }
-      href={to}>{children}</Link>
+      onClick={()=>{
+        router.push(to)
+      }}
+      >{children}</button>
   )
 }
 

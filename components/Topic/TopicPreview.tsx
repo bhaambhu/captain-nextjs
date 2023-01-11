@@ -36,7 +36,7 @@ export default function TopicPreview({ topicID, onEditButtonPress, onTopicDelete
     <div className=''>
       <LoadingIndicatorFullScreen visible={deleteTopicAPI.loading} />
       {/* Surface */}
-      <TopicDataPreview topicData={topicDetailsAPI.data} onEditButtonPress={auth.canAuthor(topicDetailsAPI.data.author) ? onEditButtonPress : null} onDeleteButtonPress={auth.canAuthor(topicDetailsAPI.data.author) ? deleteTopic : null} infoMessage={!auth.canAuthor(topicDetailsAPI.data.author) ? 'Only its author can modify this topic' : ''} />
+      <TopicDataPreview topicData={topicDetailsAPI.data} onEditButtonPress={auth.canAuthor(topicDetailsAPI.data.author) ? onEditButtonPress : null} onDeleteButtonPress={auth.canAuthor(topicDetailsAPI.data.author) ? deleteTopic : null} infoMessage={!auth.canAuthor(topicDetailsAPI.data.author) ? 'Only the author can modify this topic' : ''} />
     </div >
   )
 }
