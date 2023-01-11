@@ -58,15 +58,15 @@ function DataInfoViewer() {
         Object.entries(dataInfo).map(entry => {
           return (
             <div key={entry[0]}>
-              <SectionHeader>
+              <SectionHeader className="uppercase" bar={false}>
                 {entry[0]}
               </SectionHeader>
-              <table style={{}}>
+              <table className="mt-3">
                 {entry[1].map((item) => {
                   return (
                     <tr key={item[0]}>
-                      <td className="p-2 border bg-cclrs-bg-surface border-cclrs-dark-strong" >{item[0].replace(entry[0] + '_', '').replaceAll('_', ' ')}</td>
-                      <td className="p-2 border bg-cclrs-bg-surface border-cclrs-dark-strong">{item[1]}</td>
+                      <td className="p-2 border bg-san-surface dark:bg-san-dark-surface border-current" >{item[0].replace(entry[0] + '_', '').replaceAll('_', ' ')}</td>
+                      <td className="p-2 border bg-san-surface dark:bg-san-dark-surface border-current">{item[1]}</td>
                     </tr>
                   );
                 })}

@@ -15,14 +15,14 @@ export default function ListItemStudyPlan({
 
   return (
     <div
-      className={`flex border-current w-fit cursor-pointer ${currentTopic ? 'bg-san-primary-container text-san-on-primary-container dark:bg-san-dark-primary dark:text-san-dark-on-primary' : 'bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface'} border rounded-sm ${className}`}
+      className={`flex px-0.5 py-[1px] w-fit cursor-pointer ${currentTopic ? 'bg-san-primary-container text-san-on-primary-container dark:bg-san-dark-primary-container dark:text-san-dark-on-primary-container' : 'bg-san-surface text-san-on-surface dark:text-san-dark-on-surface dark:bg-san-dark-surface'} border border-current rounded-sm ${className}`}
       {...otherprops}
     >
       <div
         onClick={onClick} className={`flex flex-col p-1 w-full`}
       >
         {/* Icon and Subtitle */}
-        <div className="flex items-center mb-1">
+        {(!currentTopic || subtitle) && <div className="flex items-center mb-1">
           {!currentTopic && (
             <MdLock
               size="15"
@@ -32,7 +32,7 @@ export default function ListItemStudyPlan({
           <div className="text-xs font-overline">
             {subtitle}
           </div>
-        </div>
+        </div>}
         {/* Title */}
         <div className="font-overline">
           <div>{title}</div>
@@ -40,16 +40,19 @@ export default function ListItemStudyPlan({
         {/* Buttons */}
         {currentTopic && <div className={`
         font-overline 
-        text-xs 
+        text-[10px] 
         self-end  
         rounded-sm 
         p-0.5
         px-1
         mt-2
-        text-san-on-primary-container
+        mb-0.5
+        text-san-on-surface
+        dark:text-san-dark-on-surface
         border
         border-current
-        bg-san-surface     
+        bg-san-surface 
+        dark:bg-san-dark-surface    
         `} >
           CONTINUE
         </div>}

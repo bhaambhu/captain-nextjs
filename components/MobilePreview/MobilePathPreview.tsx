@@ -55,9 +55,8 @@ function PathPreview({ pathData }) {
         <div className='absolute w-full h-full '>
           <LottiePlayer
             loop
-            className='opacity-90 bg-white'
+            className='opacity-90 bg-white dark:invert'
             src={'https://assets9.lottiefiles.com/packages/lf20_GzIQOnSaf8.json'} />
-          <div>ABC</div>
         </div>
       }
     </div>
@@ -70,7 +69,7 @@ function AboutPathScreen({ pathData, onClickTopicButton }) {
       {/* Title Section */}
       <div className='flex flex-col'>
         {/* Overline */}
-        <div className='font-overline text-xs text-san-on-surface-variant'>STUDY PATH <span className='font-caption ml-1 '>for</span></div>
+        <div className='font-overline text-xs text-san-on-surface-variant dark:text-san-dark-on-surface-variant'>STUDY PATH <span className='font-caption ml-1 '>for</span></div>
         {/* Path Title */}
         <div className='font-h1_headline text-3xl mt-1 break-words'>{pathData.title}</div>
       </div>

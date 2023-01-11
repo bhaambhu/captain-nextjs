@@ -10,7 +10,7 @@ export default function ContainerWithLoading({ loading = false, classNamesForLoa
         <div className="w-full h-full absolute top-0 left-0 ">
           <LottiePlayer
             loop
-            className={twMerge(`opacity-80 bg-white ` + classNamesForLoading)}
+            className={twMerge(`opacity-80 bg-white dark:invert ` + classNamesForLoading)}
             src={'https://assets9.lottiefiles.com/packages/lf20_GzIQOnSaf8.json'} />
         </div>
       }

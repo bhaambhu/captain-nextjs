@@ -28,7 +28,6 @@ export default function LottiePlayer({ src, className = '', autoplay = true, loo
         autoplay={autoplay}
         loop={loop}
         mode=""
-
         src={src}
         {...otherProps}
       />

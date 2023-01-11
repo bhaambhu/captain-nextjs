@@ -11,6 +11,8 @@ import { FaChild, FaHandPointDown } from 'react-icons/fa'
 import { MdCheck, MdOutlineArrowBackIos, MdOutlineCheckCircle, MdRadioButtonUnchecked } from 'react-icons/md'
 import { ImCheckmark, ImCross } from 'react-icons/im'
 import LottiePlayer from '../LottiePlayer'
+import { twMerge } from 'tailwind-merge'
+import twColors from '../../config/twColors'
 
 export default function MobileTopicPreview({ topicData, showJSON = false }) {
 
@@ -37,12 +39,12 @@ export function TopicPreview({ topicData, onBackButton, onProceedToNextTopicButt
   return (
     <>
       {selectedStepIndex <= maxStepIndex ?
-        <ScrollContainer ref={ref} className='p-3 w-0 min-w-full h-0 min-h-full overflow-auto cursor-pointer'>
+        <ScrollContainer ref={ref} className='p-3 w-0 min-w-full h-0 min-h-full overflow-y-auto overflow-x-hidden no-scrollbar cursor-pointer '>
 
           {/* <div className='p-3 w-full h-0 min-h-full overflow-auto'> */}
           {/* Breadcrumbs & Back Button */}
-          <div className='font-mono font-bold flex flex-wrap text-cclrs-light-disabled text-xs gap-1 items-center'>
-            {onBackButton && <div onClick={onBackButton} className='flex uppercase border p-[1px] px-[2px] text-[10px] border-current items-center rounded-sm'><MdOutlineArrowBackIos size={8} /><span className='ml-0.5 mt-[1px]'>Back to path</span></div>}
+          <div className='font-mono font-bold flex flex-wrap text-san-on-surface-variant dark:text-san-dark-on-surface-variant text-xs gap-1 items-center'>
+            {onBackButton && <div onClick={onBackButton} className='flex uppercase bg-san-surface-variant dark:bg-san-dark-surface-variant border p-[1px] px-[2px] text-[10px] border-current items-center rounded-sm'><MdOutlineArrowBackIos size={8} /><span className='ml-0.5 mt-[1px]'>Back to path</span></div>}
             <div className='mt-1 uppercase'>
               {breadString(topicData.breadcrumbs, true) + ' > '}
             </div>
@@ -101,11 +103,11 @@ function MCQStepPreview({ stepData, onProceedButtonClick }) {
   return (
     <div className='flex flex-col'>
       {/* MCQ Title */}
-      <div className='mt-3 font-mono font-bold flex flex-wrap text-cclrs-light-disabled text-xs items-center'>
+      <div className='mt-3 font-mono font-bold flex flex-wrap text-san-on-surface-variant dark:text-san-dark-on-surface-variant text-xs items-center'>
         {stepData.title}
       </div>
       {/* Time & Difficulty */}
-      <div className='flex gap-3 text-[11px] mt-1 text-cclrs-light-disabled '>
+      <div className='flex gap-3 text-[11px] mt-1 text-san-on-surface-variant dark:text-san-dark-on-surface-variant '>
         <div className='flex items-center gap-0.5 px-0.5 border border-current font-overline uppercase rounded'>
           <RiTimerFill />{stepData.timeLength}
         </div>
@@ -128,7 +130,7 @@ function MCQStepPreview({ stepData, onProceedButtonClick }) {
       {submitted ? (
         isCorrect() ? (
           <>
-            <div className='flex items-center gap-1 mt-2 text-cclrs-green-type3 uppercase text-xs font-extrabold'>
+            <div className='flex items-center gap-1 mt-2 text-san-positive dark:text-san-dark-positive uppercase text-xs font-extrabold'>
               <ImCheckmark />
               Correct
             </div>
@@ -136,14 +138,14 @@ function MCQStepPreview({ stepData, onProceedButtonClick }) {
             <div className='text-xs'>
               {stepData.explanation}
             </div>
-            <div onClick={onProceedButtonClick} className='cursor-pointer border border-current w-fit self-end mt-3 bg-cclrs-bg-yellow px-1 py-0.5 rounded-sm font-overline'>
+            <div onClick={onProceedButtonClick} className={twMerge(twColors.addContainer+'cursor-pointer border border-current w-fit self-end mt-3 px-1 py-0.5 rounded-sm font-overline')}>
               Proceed
             </div>
           </>
         )
           : (
             <>
-              <div className='flex items-center gap-1 mt-2 text-san-error uppercase text-xs font-extrabold'>
+              <div className='flex items-center gap-1 mt-2 text-san-error dark:text-san-dark-error uppercase text-xs font-extrabold'>
                 <ImCross />
                 Wrong
               </div>
@@ -167,7 +169,7 @@ function RadioGroup({ selectedIndex, allowInput = true, onSelect, options }) {
   return (
     <>
       {/* UX Info */}
-      <div className='flex items-center gap-1 text-cclrs-light-disabled text-[10px] mt-1 ml-2 font-subtitle_1 uppercase'>
+      <div className='flex items-center gap-1 text-san-on-surface-variant dark:text-san-dark-on-surface-variant text-[10px] mt-1 ml-2 font-subtitle_1 uppercase'>
         <FaHandPointDown />
         Select one option
       </div>
@@ -178,7 +180,7 @@ function RadioGroup({ selectedIndex, allowInput = true, onSelect, options }) {
               if (allowInput) onSelect(index);
             }}
             key={index}
-            className={`flex text-xs gap-1 mt-2 border p-0.5 px-1 rounded ${index === selectedIndex ? 'border-san-primary text-san-primary' : ''}`}
+            className={`flex text-xs gap-1 mt-2 border p-0.5 px-1 rounded ${index === selectedIndex ? 'border-san-primary text-san-primary dark:border-san-dark-primary dark:text-san-dark-primary' : ''}`}
           >
             {/* Radio Button Icon */}
             <div className='pt-0.5'>
@@ -201,12 +203,12 @@ function TheoryStepPreview({ stepData, onProceedButtonClick }) {
   return (
     <div className='flex flex-col'>
       {/* Markdown previewer */}
-      <div className='prose prose-sm mt-3 text-xs'>
+      <div className='prose prose-sm mt-3 text-xs dark:prose-invert overflow-x-hidden'>
         <MarkdownPreview>{stepData.data}</MarkdownPreview>
       </div>
       {/*  */}
       {onProceedButtonClick &&
-        <div onClick={onProceedButtonClick} className='cursor-pointer border border-current w-fit self-end mt-3 bg-cclrs-bg-yellow px-1 py-0.5 rounded-sm font-overline'>
+        <div onClick={onProceedButtonClick} className={twMerge(twColors.addContainer+'cursor-pointer border border-current w-fit self-end mt-3 px-1 py-0.5 rounded-sm font-overline')}>
           Proceed
         </div>
       }
@@ -222,7 +224,7 @@ function StepsTabsNavbar({ stepsData, selectedStepID, setSelectedStepID }) {
           <div
             key={index}
             onClick={() => { setSelectedStepID(index) }}
-            className={`p-1.5 cursor-pointer rounded-sm border border-current ${selectedStepID == index ? ' bg-san-surface ' : ' bg-san-surface-variant '}`}
+            className={`p-1.5 cursor-pointer rounded-sm border border-current ${selectedStepID == index ? ' bg-san-surface dark:bg-san-dark-surface text-san-on-surface dark:text-san-dark-on-surface ' : ' bg-san-surface-variant dark:bg-san-dark-surface-variant text-san-on-surface-variant dark:text-san-dark-on-surface-variant '}`}
           >
             {/* Icon based on step type */}
             {item.type == stepType.Theory ? <SlBookOpen /> : <SlQuestion />}
@@ -241,7 +243,8 @@ function TopicCompletedScreen({ onProceedButtonClick, proceedButtonText = 'Conti
         onComplete={() => {
           setAnimCompleted(true);
         }}
-        src={'https://assets5.lottiefiles.com/packages/lf20_4qldwfx4.json'}
+        // src={'https://assets5.lottiefiles.com/packages/lf20_4qldwfx4.json'}
+        src={'https://assets5.lottiefiles.com/packages/lf20_5wEHL02hAL.json'}
       />
       {onProceedButtonClick &&
         <div onClick={onProceedButtonClick} className={`cursor-pointer border border-current w-fit mt-3 px-1 py-0.5 rounded-sm font-overline transition-opacity duration-1000 ${animCompleted ? 'opacity-100' : 'opacity-0'}`}>

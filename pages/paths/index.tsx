@@ -114,7 +114,8 @@ function PathsGrid({ paths, onCreatedPath = null, heading = '' }) {
               to={`paths/${item.id}`}
               published={item.published}
               title={item.title ? item.title : "No Title"}
-              overline={item.about ? item.about : "No Description"}
+              // overline={item.about ? item.about : "No Description"}
+              overline={item.authorName}
             />
           );
         })}
@@ -127,7 +128,7 @@ function PathsGrid({ paths, onCreatedPath = null, heading = '' }) {
               createPath(title, about);
             }}
             style={{ width: 200 }}
-            title={"Add New Path"}
+            title={"Create New Path"}
           />
         }
       </div>

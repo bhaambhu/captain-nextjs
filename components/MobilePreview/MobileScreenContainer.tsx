@@ -12,7 +12,7 @@ export default function MobileScreenContainer({ children }) {
         <div className='w-[86%] h-[75.08%] ml-[7.01%] mt-[26.57%] z-10 grid-cols-1 grid-rows-1'>
         {/* <div className='w-[270px] h-[482px] ml-[22px] mt-[83px] z-10 grid-cols-1 grid-rows-1'> */}
           {/* Content */}
-          <div className=' w-full h-full bg-white'>
+          <div className=' w-full h-full bg-san-surface dark:bg-san-dark-surface'>
             {children}
           </div>
         </div>

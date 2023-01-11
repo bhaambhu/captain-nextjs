@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge'
 import { MdEdit } from "react-icons/md";
 import {TiDelete} from "react-icons/ti"
 import twColors from "../../config/twColors";
+import { truncateString } from "../../lib/utils";
 
 // Sanjay's Editable Draggable Deletable Button
 export default function SanEDDButton({
@@ -54,7 +55,7 @@ export default function SanEDDButton({
                 className="cursor-move mr-1"
               />
             )}
-            {overline}
+            {truncateString(overline, 20)}
             {onChange && (
               <MdEdit
               className="ml-1"
@@ -90,7 +91,7 @@ export default function SanEDDButton({
               }}
             />
           ) : (
-            <div>{title}</div>
+            <div>{truncateString(title, 40)}</div>
           )}
         </div>}
       </div>

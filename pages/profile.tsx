@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import * as Yup from "yup";
 import { twMerge } from 'tailwind-merge';
-import { Button, TextButton } from '../components/Buttons/Button';
-import JSONViewer from '../components/JSONViewer';
+import { Button } from '../components/Buttons/Button';
 import SectionHeader from '../components/Texts/SectionHeader';
 import routes from '../config/routes';
 import twColors from '../config/twColors';
@@ -13,7 +12,7 @@ import LoadingIndicatorFullScreen from '../components/Loading/LoadingIndicatorFu
 import Form from '../components/Form/Form';
 import ErrorPill from '../components/Pills/ErrorPill';
 import FormField from '../components/Form/FormField';
-import SubmitButton from '../components/Form/SubmitButton';
+import SubmitButtonAutoHide from '../components/Form/SubmitButtonAutoHide';
 
 export default function Profile() {
   const auth = useAuth();
@@ -132,7 +131,7 @@ export default function Profile() {
                 </td>
                 <td className='p-3'>
                   <div className="flex justify-end">
-                    <SubmitButton>Update</SubmitButton>
+                    <SubmitButtonAutoHide>Update</SubmitButtonAutoHide>
                   </div>
                 </td>
               </tr>

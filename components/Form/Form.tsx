@@ -11,6 +11,7 @@ export default function Form({
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
+      enableReinitialize
       validationSchema={validationSchema}
     >
       {() => <>{children}</>}

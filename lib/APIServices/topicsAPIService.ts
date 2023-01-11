@@ -1,6 +1,7 @@
 import APIEndpoints from "../../config/APIEndpoints";
 import apiSauceClient from "../apiSauceClient";
 
+const getTopics = () => apiSauceClient.get(APIEndpoints.TOPICS);
 const getOrphanTopics = () => apiSauceClient.get(APIEndpoints.ORPHANTOPICS);
 const createTopic = (title, subject) => apiSauceClient.post(APIEndpoints.TOPICS, { title, subject });
 
@@ -14,6 +15,7 @@ const addRequirement = (cTopicId, rTopicId) => apiSauceClient.patch(APIEndpoints
 const removeRequirement = (cTopicId, rTopicId) => apiSauceClient.delete(APIEndpoints.TOPICS + cTopicId + "/requires/" + rTopicId + '/')
 
 const topicsAPIService = {
+  getTopics,
   getOrphanTopics,
   createTopic,
 
