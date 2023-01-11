@@ -12,6 +12,7 @@ import TopicSelectModal from "./TopicSelectModal";
 import twColors from "../config/twColors";
 import useAuth from "../lib/auth/useAuth";
 import InfoPill from "./Pills/InfoPill";
+import ListItemPath from "./ListItems/ListItemPath";
 
 export default function SubjectInfo({
   data,
@@ -122,25 +123,32 @@ function TopicsGrid({ topics }) {
   const auth = useAuth();
   return (
     <div
-      style={{
-        // padding: dimensions.contentDistance,
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: "row",
-        gap: dimensions.contentDistance,
-      }}
+      className='flex flex-col flex-wrap sm:flex-row gap-3'
     >
       {topics.map((item) => {
         return (
-          <SanEDDButton
+          <ListItemPath
             key={item.id}
             topicToSubjectDraggable={auth.isStaff()}
+            draggable={auth.isStaff()}
             topic_id={item.id}
             to={APIEndpoints.TOPICS + item.id}
-            style={{ width: 200 }}
-            title={item.title}
-            overline={item.about}
+            className='w-full sm:w-fit'
+            published={false}
+            showBadge={false}
+            title={item.title ? item.title : "No Title"}
+            // overline={item.about ? item.about : "No Description"}
+            overline={item.authorName}
           />
+          // <SanEDDButton
+          //   key={item.id}
+          //   topicToSubjectDraggable={auth.isStaff()}
+          //   topic_id={item.id}
+          //   to={APIEndpoints.TOPICS + item.id}
+          //   style={{ width: 200 }}
+          //   title={item.title}
+          //   overline={item.about}
+          // />
         );
       })}
     </div>

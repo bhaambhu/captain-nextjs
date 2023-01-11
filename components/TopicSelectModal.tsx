@@ -79,7 +79,7 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
 
             {/* Bottom Area - Content */}
             <div
-              className={twMerge(twColors.surface2 + "flex h-full justify-between p-3 ")}
+              className={twMerge(twColors.surface2 + "flex flex-col sm:flex-row h-full justify-between p-3 ")}
             >
 
               {/* Left Area - Subject Tree */}
@@ -103,9 +103,9 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
               </div> */}
               {/* Right Area - Subject Topics Display */}
               <div
-                className="w-[50%]"
+                className="w-full sm:w-[50%]"
               >
-                <div className="ml-2 h-full flex flex-col justify-between">
+                <div className=" h-full flex flex-col justify-between">
                   <ContainerWithLoading loading={detailsLoading} className=' '>
                     <ListContainer className={twMerge(twColors.surface1 + ' border-current shadow-lg w-full')}>
                       {selectedSubject ? (
@@ -116,7 +116,8 @@ export default function TopicSelectModal({ onSelectTopic, onCancel, heading }) {
                             return (
                               <SanEDDButton
                                 key={item.id}
-                                overline={item.about}
+                                overline={item.authorName}
+                                // className='bg-san-surface'
                                 title={item.title}
                                 onClick={() => {
                                   setSelectedTopic({
