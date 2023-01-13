@@ -16,5 +16,3 @@ const nextConfig = {
 module.exports = withoutCSSImport({
   ...nextConfig,
 })
-
-// module.exports = nextConfig

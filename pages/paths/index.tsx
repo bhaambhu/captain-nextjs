@@ -1,19 +1,11 @@
-import { GetStaticProps } from 'next';
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react';
 import ListItemPath from '../../components/ListItems/ListItemPath';
 import SanEDDButton from '../../components/Buttons/SanEDDButton';
-import Modal from '../../components/Modal';
-import dimensions from '../../config/dimensions';
-import { useRouter } from 'next/router';
-import { pathDBHelper } from '../../lib/DBHelpers/pathDBHelper';
-import APIEndpoints from '../../config/APIEndpoints';
 import pathsAPIService from '../../lib/APIServices/pathsAPIService';
 import useAPI from '../../lib/useAPI';
 import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import useAuth from '../../lib/auth/useAuth';
-import twColors from '../../config/twColors';
 import SectionHeader from '../../components/Texts/SectionHeader';
-import JSONViewer from '../../components/JSONViewer';
 
 // export const getStaticProps: GetStaticProps = async () => {
 //   const paths = await pathDBHelper.getAll();

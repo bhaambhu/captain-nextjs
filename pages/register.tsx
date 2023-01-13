@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
 import Form from "../components/Form/Form";
 import FormField from "../components/Form/FormField";
@@ -6,8 +6,6 @@ import SubmitButton from "../components/Form/SubmitButton";
 import useAuth from "../lib/auth/useAuth";
 import routes from "../config/routes";
 import usersAPIService from "../lib/APIServices/usersAPIService";
-import dimensions from "../config/dimensions";
-import colors from "../config/colors";
 import ErrorPill from "../components/Pills/ErrorPill";
 import useAPI from "../lib/useAPI";
 import { Button } from "../components/Buttons/Button";

@@ -1,23 +1,5 @@
-import { truncate } from 'fs';
-import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
-import { Button } from '../../../components/Buttons/Button';
-import JSONViewer from '../../../components/JSONViewer';
-import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
-import Modal from '../../../components/Modal';
-import H1 from '../../../components/Texts/H1';
-import Subtitle from '../../../components/Texts/Subtitle';
-import TopicDataPreview from '../../../components/Topic/TopicDataPreview';
 import TopicPreview from '../../../components/Topic/TopicPreview';
-import APIEndpoints from '../../../config/APIEndpoints';
-import routes from '../../../config/routes';
-import twColors from '../../../config/twColors';
-import { confirmation } from '../../../lib/utils';
-import topicsAPIService from '../../../lib/APIServices/topicsAPIService';
-import useAuth from '../../../lib/auth/useAuth';
-import { topicDBHelper } from '../../../lib/DBHelpers/topicDBHelper';
-import useAPI from '../../../lib/useAPI';
 
 // export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 //   try {

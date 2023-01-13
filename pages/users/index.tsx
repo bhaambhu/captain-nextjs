@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../../components/Buttons/Button';
-import JSONViewer from '../../components/JSONViewer';
 import LoadingIndicatorFullScreen from '../../components/Loading/LoadingIndicatorFullScreen';
 import twColors from '../../config/twColors';
 import { viewableDateTime } from '../../lib/utils';

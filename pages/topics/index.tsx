@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Modal from "../../components/Modal";
-import dimensions from "../../config/dimensions";
+import React, { useEffect } from "react";
 import SanEDDButton from "../../components/Buttons/SanEDDButton";
 import topicsAPIService from "../../lib/APIServices/topicsAPIService";
 import SectionHeader from "../../components/Texts/SectionHeader";

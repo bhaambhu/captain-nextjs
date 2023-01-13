@@ -1,4 +1,3 @@
-import prisma from "./prisma";
 
 function breadString(breadcrumbs, includeSelf = false) {
   let iterateUpto = includeSelf ? breadcrumbs.length : breadcrumbs.length - 1;
@@ -41,14 +40,5 @@ function makeSubjectAPIDataReadyForAtlaskit(apiReceivedSubjectData) {
     return { ...item, children: childrenArray, hasChildren: (item.children.length > 0), isExpanded: false, isChildrenLoading: false };
   })
 }
-
-// function getAllTableNames() {
-//   return prisma.$queryRaw`
-//     SELECT table_name
-//     FROM information_schema.tables
-//     WHERE table_schema='public'
-//     AND table_type='BASE TABLE';
-//   `
-// }
 
 export { breadString, makeSubjectAPIDataReadyForAtlaskit, viewableDateTime, confirmation, truncateString };

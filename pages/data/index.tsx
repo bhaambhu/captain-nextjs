@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../../components/Modal";
-import dimensions from "../../config/dimensions";
 import SectionHeader from "../../components/Texts/SectionHeader";
-import colors from "../../config/colors";
 import dataInfoAPIService from "../../lib/APIServices/dataInfoAPIService";
 import LoadingIndicatorFullScreen from "../../components/Loading/LoadingIndicatorFullScreen";
 

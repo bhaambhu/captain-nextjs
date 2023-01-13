@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import TopicEditor from '../../../components/Topic/TopicEditor';
-import dimensions from '../../../config/dimensions';
 import routes from '../../../config/routes';
 import useAuth from '../../../lib/auth/useAuth';
 

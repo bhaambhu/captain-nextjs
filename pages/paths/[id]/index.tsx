@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 import { Button } from '../../../components/Buttons/Button';
 import LoadingIndicatorFullScreen from '../../../components/Loading/LoadingIndicatorFullScreen';
 import MobilePathPreview from '../../../components/MobilePreview/MobilePathPreview';

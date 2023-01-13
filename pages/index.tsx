@@ -1,5 +1,3 @@
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import remarkGfm from "remark-gfm";
 import MarkdownPreview from "../components/Markdown/MarkdownPreview";
 import twColors from "../config/twColors";
 import useAuth from "../lib/auth/useAuth"
